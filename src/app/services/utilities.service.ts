@@ -8,5 +8,5 @@ export class UtilitiesService {
 
   constructor() { }
   emitGovernance = new BehaviorSubject<any>(1);
-
+  header = new BehaviorSubject<boolean>(false);
 }

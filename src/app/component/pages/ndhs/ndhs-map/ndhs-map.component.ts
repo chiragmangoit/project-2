@@ -6,6 +6,7 @@ import am5themes_Animated from '@amcharts/amcharts5/themes/Animated';
 import am5geodata_worldLow from '@amcharts/amcharts5-geodata/worldLow';
 import { MainMapService } from 'src/app/services/main-map.service';
 import { Router } from '@angular/router';
+import { UtilitiesService } from 'src/app/services/utilities.service';
 
 @Component({
     selector: 'app-ndhs-map',
@@ -21,7 +22,11 @@ export class NdhsMapComponent implements OnInit {
     chart: any;
     countries_2021: any;
     countries_2022: any;
-    constructor(private router: Router, private mapService: MainMapService) {}
+    constructor(
+        private router: Router,
+        private mapService: MainMapService,
+        private utilityService: UtilitiesService
+    ) {}
 
     ngOnInit(): void {
         //getting countries data
@@ -104,7 +109,7 @@ export class NdhsMapComponent implements OnInit {
             });
 
             circle.events.on('click', (e: any) => {
-                let country_id = e.target.dataItem?.dataContext.country_id;                
+                let country_id = e.target.dataItem?.dataContext.country_id;
                 let country_flag = e.target.dataItem?.dataContext.flagImage;
                 let country_iso_code = e.target.dataItem?.dataContext.iso_code;
                 let year = e.target.dataItem.dataContext?.year;
@@ -153,7 +158,8 @@ export class NdhsMapComponent implements OnInit {
                     );
                     localStorage.setItem('year', JSON.stringify(year));
                 }
-                this.redirectToNdhsMap()
+                this.utilityService.header.next(true);
+                this.redirectToNdhsMap();
             });
 
             return am5.Bullet.new(this.root, {

@@ -14,9 +14,7 @@ export class HeaderInnerComponent implements OnInit {
 
     ngOnInit(): void {
         this.value = JSON.parse(localStorage.getItem('governance_id') || '');
-        if (this.router.url === '/ndhs-map') {
-            this.showHeader = false;
-        }
+        this.utilityService.header.subscribe( showValue =>  this.showHeader = showValue)
     }
 
     setGovernance(value: any) {
