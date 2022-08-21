@@ -25,8 +25,8 @@
         </div>
         <span class="example-spacer"></span>
             <div class="header-tabs" *ngIf="showHeader" >
-            <button class="active"  mat-button>Health & IT</button>
-            <button mat-button>Digital Health</button>
+            <button [class]=" value == 1 ? 'active' : '' "  mat-button (click)="setGovernance(1)" >Health & IT</button>
+            <button mat-button [class]=" value == 2 ? 'active' : '' " (click)="setGovernance(2)">Digital Health</button>
             </div>
     </mat-toolbar>
     <!-- toolbar header End -->

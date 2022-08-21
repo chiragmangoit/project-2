@@ -104,7 +104,7 @@ export class NdhsMapComponent implements OnInit {
             });
 
             circle.events.on('click', (e: any) => {
-                let country_id = e.target.dataItem?.dataContext.country_id;
+                let country_id = e.target.dataItem?.dataContext.country_id;                
                 let country_flag = e.target.dataItem?.dataContext.flagImage;
                 let country_iso_code = e.target.dataItem?.dataContext.iso_code;
                 let year = e.target.dataItem.dataContext?.year;
@@ -179,7 +179,7 @@ export class NdhsMapComponent implements OnInit {
                     iso_code: data.iso_code,
                     flagImage: data.flag,
                     flag: '/assets/flags/' + data.flag,
-                    country_id: data.country_id,
+                    country_id: data.id,
                     circleTemplate: data.bulletColors,
                     year: year,
                 });
@@ -189,7 +189,6 @@ export class NdhsMapComponent implements OnInit {
     }
 
     onSelectYear(year: string) {
-        // console.log(this.pointSeries.data.values);
         if (!this.selectedYear.includes(year)) {
             this.selectedYear.push(year);
             this.setCountry();
