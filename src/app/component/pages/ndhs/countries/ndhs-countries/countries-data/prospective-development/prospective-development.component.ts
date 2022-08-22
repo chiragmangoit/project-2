@@ -59,13 +59,14 @@ export class ProspectiveDevelopmentComponent implements OnInit, OnDestroy {
                     for (const key in this.viewData) {
                         this.ndhsDetails.push({ [key]: this.viewData[key] });
                     }
-                    //    console.log(this.object(this.viewData['Availability']));
-
-                    console.log(this.ndhsDetails);
                 })
         );
     }
 
+    handlePrint() {
+        window.print();
+    }
+    
     ngOnDestroy(): void {
         this.subscription.unsubscribe();
         this.utilityService.header.next(false);

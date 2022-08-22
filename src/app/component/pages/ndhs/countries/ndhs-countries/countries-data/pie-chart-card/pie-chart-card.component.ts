@@ -2,6 +2,9 @@ import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DataModalComponent } from '../data-modal/data-modal.component';
 import * as am4core from '@amcharts/amcharts4/core';
+import { object } from '@amcharts/amcharts5';
+import * as am4charts from '@amcharts/amcharts4/charts';
+import am4themes_animated from '@amcharts/amcharts4/themes/animated';
 
 @Component({
     selector: 'pie-chart-card',
@@ -10,16 +13,19 @@ import * as am4core from '@amcharts/amcharts4/core';
 })
 export class PieChartCardComponent implements OnInit {
     @Input() taxonomies: any;
-    loading:boolean =  true;
+    loading: boolean = true;
+    object: any = object.keys;
+    log: any = console.log;
 
     constructor(public dialog: MatDialog) {}
 
     ngOnInit(): void {
         am4core.options.autoDispose = true;
 
-        if(this.taxonomies && this.taxonomies.length){
+        if (this.taxonomies && this.taxonomies.length) {
             this.loading = false;
         }
+        
     }
 
     openViewData(
@@ -42,4 +48,6 @@ export class PieChartCardComponent implements OnInit {
             },
         });
     }
+
+  
 }
