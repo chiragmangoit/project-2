@@ -1,6 +1,7 @@
 <!-- <div class="loader-overlay" *ngIf="showloader">
     <img src="../../../../../assets/images/loader.gif" alt="" />
 </div> -->
+<div id="chartdiv"></div>
 <div class="two-column-layout">
     <div class="container-fluid">
         <div class="row">
@@ -79,7 +80,7 @@
                                     <div class="vertical-tab-tree">
                                         <ul>
                                             <div class="main-li" id="present_development">
-                                                <li class="parent-li" data-tag="one" id="present_deve" 
+                                                <li class="parent-li" data-tag="one" id="present_deve"
                                                    >
                                                     <a class="toggleSubmenu1">Present Development</a>
                                                 </li>
@@ -94,7 +95,7 @@
                                                 </ul>
                                             </div>
                                             <div class="main-li" id="prospective_development">
-                                                <li class="parent-li" data-tag="four" 
+                                                <li class="parent-li" data-tag="four"
                                                     >
                                                     <a class="toggleSubmenu1" >Prospective Development</a>
 
@@ -123,7 +124,7 @@
                                         </div>
                                         <mat-accordion>
                                             <ng-container >
-                                                <mat-expansion-panel 
+                                                <mat-expansion-panel
                                                     hideToggle>
                                                     <mat-expansion-panel-header>
                                                         <mat-panel-title>
@@ -138,7 +139,7 @@
                                                            >
                                                             <mat-accordion>
                                                                 <div class="content-inner">
-                                                                    <mat-expansion-panel 
+                                                                    <mat-expansion-panel
                                                                         hideToggle>
                                                                         <mat-expansion-panel-header>
                                                                             <div class="left-content col-md-7">
@@ -187,10 +188,10 @@
                                                                                 <div class="country-1 col-md-3">
                                                                                     <div class="rating">
                                                                                         <span
-                                                                                            
+
                                                                                             class="green success"></span>
                                                                                         <span
-                                                                                           
+
                                                                                             class="alert-red danger"></span>
                                                                                         <span
                                                                                             class="gray disable-status"></span>
@@ -224,7 +225,7 @@
                                         </div>
                                         <mat-accordion>
                                             <ng-container >
-                                                <mat-expansion-panel 
+                                                <mat-expansion-panel
                                                     hideToggle>
                                                     <mat-expansion-panel-header>
                                                         <mat-panel-title>
@@ -239,7 +240,7 @@
                                                            >
                                                             <mat-accordion>
                                                                 <div class="content-inner">
-                                                                    <mat-expansion-panel 
+                                                                    <mat-expansion-panel
                                                                         hideToggle>
                                                                         <mat-expansion-panel-header>
                                                                             <div class="left-content col-md-7">
@@ -288,7 +289,7 @@
                                                                                 <div class="country-1 col-md-3">
                                                                                     <div class="rating">
                                                                                         <span
-                                                                                          
+
                                                                                             class="green success"></span>
                                                                                         <span
                                                                                             class="alert-red danger"></span>
@@ -324,7 +325,7 @@
                                         </div>
                                         <mat-accordion>
                                             <ng-container >
-                                                <mat-expansion-panel 
+                                                <mat-expansion-panel
                                                     hideToggle>
                                                     <mat-expansion-panel-header>
                                                         <mat-panel-title>
@@ -339,7 +340,7 @@
                                                            >
                                                             <mat-accordion>
                                                                 <div class="content-inner">
-                                                                    <mat-expansion-panel 
+                                                                    <mat-expansion-panel
                                                                          hideToggle>
                                                                         <mat-expansion-panel-header>
                                                                             <div class="left-content col-md-7">
@@ -387,7 +388,7 @@
                                                                             <div class="country-1 col-md-3">
                                                                                 <div class="rating">
                                                                                     <span
-                                                                                       
+
                                                                                         class="green success"></span>
                                                                                     <span
                                                                                         class="alert-red danger"></span>
@@ -423,7 +424,7 @@
                                         </div>
                                         <mat-accordion>
                                             <ng-container >
-                                                <mat-expansion-panel 
+                                                <mat-expansion-panel
                                                     hideToggle>
                                                     <mat-expansion-panel-header>
                                                         <mat-panel-title>
@@ -438,7 +439,7 @@
                                                             >
                                                             <mat-accordion>
                                                                 <div class="content-inner">
-                                                                    <mat-expansion-panel 
+                                                                    <mat-expansion-panel
                                                                       hideToggle>
                                                                         <mat-expansion-panel-header>
                                                                             <div class="left-content col-md-7">
@@ -522,7 +523,7 @@
                                         </div>
                                         <mat-accordion>
                                             <ng-container >
-                                                <mat-expansion-panel 
+                                                <mat-expansion-panel
                                                     hideToggle>
                                                     <mat-expansion-panel-header>
                                                         <mat-panel-title>
@@ -537,7 +538,7 @@
                                                            >
                                                             <mat-accordion>
                                                                 <div class="content-inner">
-                                                                    <mat-expansion-panel 
+                                                                    <mat-expansion-panel
                                                                          hideToggle>
                                                                         <mat-expansion-panel-header>
                                                                             <div class="left-content col-md-7">
@@ -586,7 +587,7 @@
                                                                             <div class="country-1 col-md-3">
                                                                                 <div class="rating">
                                                                                     <span
-                                                                                      
+
                                                                                         class="green success"></span>
                                                                                     <span
                                                                                         class="alert-red danger"></span>
@@ -622,7 +623,7 @@
                                         </div>
                                         <mat-accordion>
                                             <ng-container>
-                                                <mat-expansion-panel 
+                                                <mat-expansion-panel
                                                     hideToggle>
                                                     <mat-expansion-panel-header>
                                                         <mat-panel-title>
@@ -637,7 +638,7 @@
                                                             >
                                                             <mat-accordion>
                                                                 <div class="content-inner">
-                                                                    <mat-expansion-panel 
+                                                                    <mat-expansion-panel
                                                                          hideToggle>
                                                                         <mat-expansion-panel-header>
                                                                             <div class="left-content col-md-7">
@@ -686,7 +687,7 @@
                                                                             <div class="country-1 col-md-3">
                                                                                 <div class="rating">
                                                                                     <span
-                                                                                       
+
                                                                                         class="green success"></span>
                                                                                     <span
                                                                                         class="alert-red danger"></span>
@@ -768,7 +769,7 @@
                                     </div>
                                     <div class="progress-line">
                                         <div >
-                                            <div class="progress-bar" 
+                                            <div class="progress-bar"
                                                 role="progressbar" style="width: 250px"
                                                 aria-valuenow="comparative.score" aria-valuemin="0" aria-valuemax="100">
                                             </div>
@@ -795,7 +796,7 @@
                                 </div>
                             </div>
                             <div class="table-com">
-                                <div class="demo-chart" style="height:50vh;width:100%;"></div>
+                                <div echarts [options]="chartOptionBar" class="demo-chart"></div><div class="demo-chart" style="height:50vh;width:100%;"></div>
                             </div>
                         </div>
                     </div>
@@ -805,3 +806,4 @@
         </div>
     </div>
 </div>
+
