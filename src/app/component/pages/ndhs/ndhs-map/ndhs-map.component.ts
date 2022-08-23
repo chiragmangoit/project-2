@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 
 import * as am5 from '@amcharts/amcharts5';
 import * as am5map from '@amcharts/amcharts5/map';
@@ -13,7 +13,7 @@ import { UtilitiesService } from 'src/app/services/utilities.service';
     templateUrl: './ndhs-map.component.html',
     styleUrls: ['./ndhs-map.component.css'],
 })
-export class NdhsMapComponent implements OnInit {
+export class NdhsMapComponent implements OnInit, AfterViewInit {
     countriesToShow: any;
     countriesData: any;
     selectedYear: any = ['2021'];
@@ -45,8 +45,15 @@ export class NdhsMapComponent implements OnInit {
                 ...{ '2021': this.countries_2021 },
                 ...{ '2022': this.countries_2022 },
             };
+            this.setCountry();
         });
+    }
 
+    ngAfterViewInit(): void {
+        this.setMap();
+    }
+
+    setMap() {
         // Create root
         this.root = am5.Root.new('chartdiv');
 
@@ -94,10 +101,10 @@ export class NdhsMapComponent implements OnInit {
                 templateField: 'circleTemplate',
                 radius: 3,
                 tooltipHTML: `
-              <div style="text-align:center; background:#fff; padding:10px; box-shadow: 0px 5px 10px rgba(111, 111, 111, 0.2); border-radius:4px;width:99px;">
-              <img src="{flag}" width="20px" height="20px" style="border-radius:50%"><br>
-              <span style="color:rgba(0, 0, 0, 0.32);font-size:12px;">{title}</span><div style="text-align:center;width:100%;display: flex;justify-content: center;"></div></div>
-            `,
+               <div style="text-align:center; background:#fff; padding:10px; box-shadow: 0px 5px 10px rgba(111, 111, 111, 0.2); border-radius:4px;width:99px;">
+               <img src="{flag}" width="20px" height="20px" style="border-radius:50%"><br>
+               <span style="color:rgba(0, 0, 0, 0.32);font-size:12px;">{title}</span><div style="text-align:center;width:100%;display: flex;justify-content: center;"></div></div>
+             `,
             });
 
             circle.states.create('hover', {
@@ -166,10 +173,6 @@ export class NdhsMapComponent implements OnInit {
                 sprite: circle,
             });
         });
-
-        setTimeout(() => {
-            this.setCountry();
-        }, 2000);
     }
 
     setCountry() {
