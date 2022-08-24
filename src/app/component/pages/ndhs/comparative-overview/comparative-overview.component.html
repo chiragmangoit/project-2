@@ -31,11 +31,14 @@
                                 <!-- <h5 *ngIf="governance_name">{{governance_name}}</h5> -->
                                 <button >Bar Chart</button>
 
+
                                 <!-- <button mat-raised-button (click)="ToggleChart()">{{chartTitle}}</button> -->
                             </div>
                             <div class="table-com">
                                 <div>
                                 <!-- <div [class]="showBarChart ? 'showChart' : 'hideChart'"> -->
+                            <div echarts [options]="bar" class="deo-chart"></div>
+
                                     <div id="chartdiv2" style="width: 500px; height: 250px;margin: 0 auto;"></div>
                                 </div>
                                 <div>
@@ -52,6 +55,7 @@
                 <!-- panel one End -->
                 <!-- panel one start -->
                 <div class="panel comparative-details">
+
                     <div class="panel-content">
                         <div class="table-details-heading">
                             <div class="status-table">
@@ -62,6 +66,7 @@
                     <div class="panel-content">
                         <div class="select-country-area">
                             <div class="country-label table-details-heading">
+
                                 <!-- <h5>{{this.bar_chart ? this.bar_chart[0].development_type : ''}}</h5>
                                 <h6>{{this.bar_chart ? this.bar_chart[0].ultimate_field : ''}}</h6> -->
                             </div>
@@ -195,8 +200,11 @@
                                 </div>
                             </div>
                             <div class="table-com">
-                                <div echarts [options]="chartOptionRadar" class="demo-chart"></div>
 
+                                <!-- <div echarts [options]="bubblechart" class="demo-chart"></div> -->
+                                <div id="chartdiv"></div>
+
+                                <div echarts [options]="chartOptionRadar" class="demo-chart"></div>
                             </div>
                         </div>
                     </div>
