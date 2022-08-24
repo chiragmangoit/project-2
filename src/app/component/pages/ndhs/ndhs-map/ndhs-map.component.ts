@@ -198,8 +198,10 @@ export class NdhsMapComponent implements OnInit, AfterViewInit {
     }
 
     onSelectYear(year: string) {
+        localStorage.removeItem('selected_years');
         if (!this.selectedYear.includes(year)) {
             this.selectedYear.push(year);
+            localStorage.setItem('selected_years', JSON.stringify(this.selectedYear));
             this.setCountry();
             return true;
         } else {
@@ -207,6 +209,8 @@ export class NdhsMapComponent implements OnInit, AfterViewInit {
                 this.selectedYear = this.selectedYear.filter(
                     (item: string) => item !== year
                 );
+                this.selectedYear.push(year);
+                localStorage.setItem('selected_years', JSON.stringify(this.selectedYear));
                 this.setCountry();
                 return true;
             } else {

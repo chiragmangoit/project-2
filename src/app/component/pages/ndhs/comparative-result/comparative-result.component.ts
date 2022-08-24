@@ -34,6 +34,11 @@ export class ComparativeResultComponent implements OnInit, AfterViewInit {
     mySelections: string[] = [];
     countrySelected: string | null | undefined;
     oldSelections: string[] = [];
+    comparitiveData: any = [];
+    uniqueCountry: any[] = [];
+    resultArray: any = [];
+    object: any = Object.keys;
+    log: any = console.log;
 
     @ViewChild('mySelect') mySelect: ElementRef | any;
 
@@ -82,6 +87,7 @@ export class ComparativeResultComponent implements OnInit, AfterViewInit {
                 ...{ '2022': this.countries_2022 },
             };
             this.setCountry();
+            this.getComparitive();
         });
     }
 
@@ -275,7 +281,7 @@ export class ComparativeResultComponent implements OnInit, AfterViewInit {
                     this.utilityService.emitDefaultCountries.next(
                         defaultCountry
                     );
-                    // this.getComparativeData();
+                    this.getComparitive();
                     localStorage.removeItem('selected_country');
                     localStorage.setItem(
                         'selected_country',
@@ -286,5 +292,124 @@ export class ComparativeResultComponent implements OnInit, AfterViewInit {
             }
             this.toppings.setValue(this.mySelections);
         }
+    }
+
+    getComparitive() {
+        let data = {
+            countries: this.countrySelected,
+            developmentId: '1,2',
+            year: this.selectedYear.toString(),
+        };
+        this.apiService.getComparative(data).subscribe((response) => {
+            this.comparitiveData = response;
+            this.setComparitive();
+        });
+    }
+
+    setComparitive() {
+        this.resultArray = [];
+        this.uniqueCountry = [
+            ...new Set(
+                this.comparitiveData.reduce(
+                    (acc: any, curr: any) => [...acc, curr.country],
+                    []
+                )
+            ),
+        ];
+        let developmentType: any = [
+            ...new Set(
+                this.comparitiveData.reduce(
+                    (acc: any, curr: any) => [...acc, curr.development_type],
+                    []
+                )
+            ),
+        ];
+
+        let governanceName: any = [
+            ...new Set(
+                this.comparitiveData.reduce(
+                    (acc: any, curr: any) => [...acc, curr.governance_name],
+                    []
+                )
+            ),
+        ];
+        let ultimateField: any = [
+            ...new Set(
+                this.comparitiveData.reduce(
+                    (acc: any, curr: any) => [...acc, curr.ultimate_field],
+                    []
+                )
+            ),
+        ];
+        function myFunc(obj: any[], prop: string) {
+            return obj.reduce(function (acc, item) {
+                let key = item[prop];
+                if (typeof key === 'string') {
+                    key = key.replace(/\s+/g, '');
+                }
+                if (!acc[key]) {
+                    acc[key] = [];
+                }
+                if (prop == 'q_indicator_id') {
+                    if (
+                        acc[key].findIndex(
+                            (x: { q_indicator_id: any }) =>
+                                x.q_indicator_id === item.q_indicator_id
+                        ) === -1
+                    ) {
+                        acc[key].push(item);
+                    }
+                } else {
+                    acc[key].push(item);
+                }
+                return acc;
+            }, {});
+        }
+
+        let groupByDevelopmentType = myFunc(
+            this.comparitiveData,
+            'development_type'
+        );
+        developmentType.forEach((development: any) => {
+            this.resultArray.push({
+                [development]: [],
+            });
+            let oldDevelopment = development;
+            if (typeof development === 'string') {
+                development = development.replace(/\s+/g, '');
+            }
+            let groupByUltimateField = myFunc(
+                groupByDevelopmentType[development],
+                'ultimate_field'
+            );
+            let groupByGovernanceName: any;
+            ultimateField.forEach((id: any) => {
+                if (typeof id === 'string') {
+                    id = id.replace(/\s+/g, '');
+                }
+                if (groupByUltimateField[id] !== undefined) {
+                    groupByGovernanceName = myFunc(
+                        groupByUltimateField[id],
+                        'governance_name'
+                    );
+                }
+                this.resultArray.forEach(
+                    (element: {
+                        [x: string]: { [x: number]: [string, unknown][] }[];
+                    }) => {
+                        if (
+                            element[oldDevelopment] !== undefined &&
+                            groupByGovernanceName !== undefined
+                        ) {
+                            element[oldDevelopment].push({
+                                [id]: groupByGovernanceName,
+                            });
+                        }
+                    }
+                );
+            });
+        });
+        this.resultArray[0]['Present Development'].splice(2, 2);
+        console.log(this.resultArray);
     }
 }

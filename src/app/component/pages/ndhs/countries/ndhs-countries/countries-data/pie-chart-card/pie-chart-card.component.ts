@@ -118,9 +118,43 @@ export class PieChartCardComponent implements OnInit, AfterViewInit {
             Math.round(
                 ((+chartData[0].litres + +chartData[1].litres) / 200) * 100
             ).toString() + '%';
+
         label.horizontalCenter = 'middle';
         label.verticalCenter = 'middle';
-        label.fontSize = 25;
+        label.fontSize = 22;
+        label.fontWeight = 'normal';
+        series.labels.template.maxWidth = 80;
+        series.fontSize = 10;
+        series.fontWeight = 'bold';
+        series.labels.template.wrap = true;
+        
+        series.ticks.template.events.on('ready', hideSmall);
+        series.ticks.template.events.on(
+            'visibilitychanged',
+            hideSmall
+        );
+        series.labels.template.events.on(
+            'ready',
+            hideSmall
+        );
+        series.labels.template.events.on(
+            'visibilitychanged',
+            hideSmall
+        );
+        series.labels.template.maxWidth = 70;
+        series.labels.template.wrap = true;
+
+        function hideSmall(ev: any) {
+            if (
+                ev.target.dataItem.hasProperties == false ||
+                ev.target.dataItem.dataContext.percentage ==
+                    0
+            ) {
+                ev.target.hide();
+            } else {
+                ev.target.show();
+            }
+        }
 
         series.labels.template.text = '{country}';
         // console.log(chart.data[2]);

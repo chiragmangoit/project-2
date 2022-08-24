@@ -25,7 +25,8 @@
                                     <mat-select
                                         #mySelect
                                         [(ngModel)]="mySelections"
-                                        [formControl]="toppings" (selectionChange)="changed()"
+                                        [formControl]="toppings"
+                                        (selectionChange)="changed()"
                                         multiple
                                     >
                                         <mat-option
@@ -78,13 +79,13 @@
                                             <span
                                                 class="circle_badge success"
                                             ></span>
-                                            <!-- {{ comparitive_countries[0] }} -->
+                                            {{ uniqueCountry[0] }}
                                         </li>
                                         <li>
                                             <span
                                                 class="circle_badge danger"
                                             ></span>
-                                            <!-- {{ comparitive_countries[1] }} -->
+                                            {{ uniqueCountry[1] }}
                                         </li>
                                     </ul>
                                 </div>
@@ -103,166 +104,107 @@
                                                 </th>
                                             </tr>
                                         </thead>
-                                        <tbody>
+                                        <tbody *ngFor="let data of resultArray">
                                             <tr>
                                                 <td
                                                     colspan="3"
                                                     class="com-data-heading"
                                                 >
-                                                    Present Development
+                                                    {{ object(data) }}
                                                 </td>
                                             </tr>
-                                            <tr class="border-less">
+                                            <tr
+                                                class="border-less"
+                                                *ngFor="
+                                                    let uf of data[
+                                                        object(data)
+                                                    ];
+                                                    let i = index
+                                                "
+                                            >
                                                 <td style="width: 39%">
                                                     <span
                                                         class="circle_badge success"
                                                     ></span
-                                                    >Availability
+                                                    >{{ object(uf) }}
                                                 </td>
-                                                <td style="width: 35%">
-                                                    <ng-container>
-                                                        <span
-                                                            class="square-badge success"
-                                                        >
-                                                            <!-- {{availability.percentage}}% -->
-                                                        </span>
-                                                        <span
-                                                            class="square-badge danger"
-                                                        >
-                                                            <!-- {{availability.percentage}}% -->
-                                                        </span>
-                                                    </ng-container>
-                                                </td>
-                                                <td style="width: 38%">
-                                                    <ng-container>
-                                                        <span
-                                                            class="square-badge success"
-                                                        >
-                                                            <!-- {{availability.percentage}}% -->
-                                                        </span>
-                                                        <span
-                                                            class="square-badge danger"
-                                                        >
-                                                            <!-- {{availability.percentage}}% -->
-                                                        </span>
-                                                    </ng-container>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td style="width: 39%">
-                                                    <span
-                                                        class="circle_badge success"
-                                                    ></span
-                                                    >Readiness
-                                                </td>
-                                                <td style="width: 35%">
-                                                    <ng-container>
-                                                        <span
-                                                            class="square-badge success"
-                                                        >
-                                                            <!-- {{readiness.percentage}}% -->
-                                                        </span>
-                                                        <span
-                                                            class="square-badge danger"
-                                                        >
-                                                            <!-- {{readiness.percentage}}% -->
-                                                        </span>
-                                                    </ng-container>
-                                                </td>
-                                                <td style="width: 38%">
-                                                    <ng-container>
-                                                        <span
-                                                            class="square-badge success"
-                                                        >
-                                                            <!-- {{readiness.percentage}}% -->
-                                                        </span>
-                                                        <span
-                                                            class="square-badge danger"
-                                                        >
-                                                            <!-- {{readiness.percentage}}% -->
-                                                        </span>
-                                                    </ng-container>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-
-                                        <tbody>
-                                            <tr>
                                                 <td
-                                                    colspan="3"
-                                                    class="com-data-heading"
+                                                    style="width: 35%"
+                                                    *ngFor="
+                                                        let item of object(
+                                                            uf[object(uf)]
+                                                        ); let j = index
+                                                    "
                                                 >
-                                                    Prospective Development
-                                                </td>
-                                            </tr>
-                                            <tr class="border-less">
-                                                <td style="width: 39%">
-                                                    <span
-                                                        class="circle_badge success"
-                                                    ></span
-                                                    >Capacity Building
-                                                </td>
-                                                <td style="width: 35%">
-                                                    <ng-container>
+                                                    <ng-container *ngIf=" i == 0" >
                                                         <span
                                                             class="square-badge success"
                                                         >
-                                                            <!-- {{capacity_building.percentage}}% -->
+                                                        
+                                                            {{
+                                                                uf[object(uf)][
+                                                                    item
+                                                                ][0].percentage
+                                                            }}%
                                                         </span>
                                                         <span
                                                             class="square-badge danger"
                                                         >
-                                                            <!-- {{capacity_building.percentage}}% -->
+                                                            {{
+                                                                uf[object(uf)][
+                                                                    item
+                                                                ][1].percentage
+                                                            }}%
                                                         </span>
                                                     </ng-container>
-                                                </td>
-                                                <td style="width: 38%">
-                                                    <ng-container>
+                                                    <ng-container *ngIf=" i == 1 && j == 0 ">
                                                         <span
                                                             class="square-badge success"
                                                         >
-                                                            <!-- {{capacity_building.percentage}}% -->
+                                                        
+                                                            {{
+                                                                uf[object(uf)][
+                                                                object(
+                                                                    uf[object(uf)]
+                                                                )[i]
+                                                                ][0].percentage
+                                                            }}%
                                                         </span>
                                                         <span
                                                             class="square-badge danger"
                                                         >
-                                                            <!-- {{capacity_building.percentage}}% -->
+                                                            {{
+                                                                uf[object(uf)][
+                                                                object(
+                                                                    uf[object(uf)]
+                                                                )[i]
+                                                                ][1].percentage
+                                                            }}%
                                                         </span>
                                                     </ng-container>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td style="width: 39%">
-                                                    <span
-                                                        class="circle_badge success"
-                                                    ></span
-                                                    >Development Strategy
-                                                </td>
-                                                <td style="width: 35%">
-                                                    <ng-container>
+                                                    <ng-container *ngIf=" i == 1 && j == 1 ">
                                                         <span
                                                             class="square-badge success"
                                                         >
-                                                            <!-- {{development_strategy.percentage}}% -->
+                                                        
+                                                            {{
+                                                                uf[object(uf)][
+                                                                object(
+                                                                    uf[object(uf)]
+                                                                )[0]
+                                                                ][0].percentage
+                                                            }}%
                                                         </span>
                                                         <span
                                                             class="square-badge danger"
                                                         >
-                                                            <!-- {{development_strategy.percentage}}% -->
-                                                        </span>
-                                                    </ng-container>
-                                                </td>
-                                                <td style="width: 38%">
-                                                    <ng-container>
-                                                        <span
-                                                            class="square-badge success"
-                                                        >
-                                                            <!-- {{development_strategy.percentage}}% -->
-                                                        </span>
-                                                        <span
-                                                            class="square-badge danger"
-                                                        >
-                                                            <!-- {{development_strategy.percentage}}% -->
+                                                            {{
+                                                                uf[object(uf)][
+                                                                object(
+                                                                    uf[object(uf)]
+                                                                )[0]
+                                                                ][1].percentage
+                                                            }}%
                                                         </span>
                                                     </ng-container>
                                                 </td>
