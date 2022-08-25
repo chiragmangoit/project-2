@@ -46,12 +46,11 @@ export class ComparativeOverviewComponent implements OnInit {
     newScore: any = [];
     sort: any;
     chartOptionNode: any;
-    thirty:any = [];
-    sixty:any = [];
-    eighty:any = [];
-    hundred:any = [];
-    toggle:any = true;
-
+    thirty: any = [];
+    sixty: any = [];
+    eighty: any = [];
+    hundred: any = [];
+    toggle: any = true;
 
     @ViewChild('main') main: ElementRef | any;
     constructor(
@@ -1435,6 +1434,97 @@ export class ComparativeOverviewComponent implements OnInit {
         ],
     };
 
+    ngOnInit(): void {
+        (this.selectedCountries = localStorage.getItem('selected_country')),
+            console.log(this.selectedCountries);
+        this.currentYear = JSON.parse(
+            localStorage.getItem('selected_years') || ''
+        );
+
+        this.utilityService.emitNodeData.subscribe((value: any) => {
+            let data = {
+                countries: this.selectedCountries,
+                developmentId: '1,2',
+                governanceId: value.g_id,
+                taxonomyId: value.t_id,
+                year: this.currentYear,
+            };
+            let bubbleData = {
+                developmentId: '1,2',
+                governanceId: value.g_id,
+                taxonomyId: value.t_id,
+                ultimateId: value.u_id,
+                year: this.currentYear,
+            };
+
+            // console.log(data);
+            this.common.getOverviewRadarChart(data).subscribe((val) => {
+                // console.log(val);
+                // console.log(val);
+                this.sort = val.reduce(
+                    (
+                        group: { [x: string]: any[] },
+                        product: { country_name: any }
+                    ) => {
+                        const { country_name } = product;
+                        group[country_name] = group[country_name] ?? [];
+                        group[country_name].push(product);
+                        return group;
+                    },
+                    {}
+                );
+                let keys = Object.keys(this.sort);
+                this.newScore = [];
+                this.radarChart(this.sort);
+            });
+
+            this.common.getOverviewBubbleChart(bubbleData).subscribe((bub) => {
+                this.thirty = [];
+                this.sixty = [];
+                this.eighty = [];
+                this.hundred = [];
+                // console.log(bub);
+                bub.forEach((bubData: any) => {
+                    if (bubData.percentage <= 30) {
+                        this.thirty.push({
+                            name: bubData.iso_code,
+                            value: 1,
+                        });
+                    } else if (
+                        bubData.percentage <= 60 &&
+                        bubData.percentage > 30
+                    ) {
+                        this.sixty.push({
+                            name: bubData.iso_code,
+                            value: 1,
+                        });
+                    } else if (
+                        bubData.percentage <= 80 &&
+                        bubData.percentage > 60
+                    ) {
+                        this.eighty.push({
+                            name: bubData.iso_code,
+                            value: 1,
+                        });
+                    } else if (
+                        bubData.percentage <= 100 &&
+                        bubData.percentage > 80
+                    ) {
+                        this.hundred.push({
+                            name: bubData.iso_code,
+                            value: 1,
+                        });
+                    }
+                });
+                this.bubbleChart();
+            });
+        });
+    }
+
+    ngAfterViewInit() {
+        this.nodeChart();
+        this.cd.detectChanges();
+    }
 
     toggleCharts() {
         this.toggle = !this.toggle;
@@ -1490,13 +1580,6 @@ export class ComparativeOverviewComponent implements OnInit {
                 this.utilityService.emitNodeData.next(e.data);
             }
             this.radarChart(this.sort);
-            // console.log(e.data.t_id)
-            // this.governanceId = e.data.g_id;
-            // this.governanceId = e.data.g_id;
-            // this.scoreGenerator(rtId);
-            // this.graph.nodes.forEach((nodeData)=> {
-            //     console.log(nodeData.u_id);
-            // })
         });
     }
 
@@ -1540,48 +1623,6 @@ export class ComparativeOverviewComponent implements OnInit {
             },
         ],
     };
-
-    // radarChart() {
-    //     this.chartOptionRadar = {
-    //         title: {},
-    //         legend: {
-    //             data: ['Allocated Budget', 'Actual Spending'],
-    //         },
-    //         radar: {
-    //             shape: 'circle',
-    //             splitArea: {
-    //                 areaStyle: {
-    //                     color: ['#FFFAE3', '#F0EFEF'],
-    //                     shadowColor: 'rgba(0, 0, 0, 0)',
-    //                     shadowBlur: 10,
-    //                 },
-    //             },
-    //             indicator: [
-    //                 { text: 'Availability', max: 100 },
-    //                 { text: 'Capacity Building', max: 100 },
-    //                 { text: 'Development Strategy', max: 100 },
-    //                 { text: 'Readiness', max: 100 },
-    //             ],
-    //         },
-    //         series: [
-    //             {
-    //                 name: 'Budget vs spending',
-    //                 type: 'radar',
-    //                 data: [
-    //                     {
-    //                         value: [this.aScore, this.cScore, this.dScore, this.aScore],
-    //                         name: 'Allocated Budget',
-    //                     },
-    //                     {
-    //                         value: [2, 2, 2, 2],
-    //                         name: 'Actual Spending',
-    //                         areaStyle: {},
-    //                     },
-    //                 ],
-    //             },
-    //         ],
-    //     };
-    // }
 
     radarChart(sort: any) {
         let keys = Object.keys(sort);
@@ -1663,7 +1704,6 @@ export class ComparativeOverviewComponent implements OnInit {
     }
 
     bubbleChart() {
-
         am4core.useTheme(am4themes_animated);
 
         var chart = am4core.create(
@@ -1724,7 +1764,7 @@ export class ComparativeOverviewComponent implements OnInit {
                 value: 3,
                 x: am4core.percent(550),
                 y: am4core.percent(25),
-            }
+            },
         ];
 
         series.dataFields.linkWith = 'linkWith';
@@ -1757,92 +1797,5 @@ export class ComparativeOverviewComponent implements OnInit {
 
         series.nodes.template.outerCircle.strokeOpacity = 0;
         series.nodes.template.outerCircle.fillOpacity = 0;
-    }
-
-    ngOnInit(): void {
-        this.selectedCountries = localStorage.getItem('selected_country'),
-        console.log(this.selectedCountries);
-        this.currentYear = JSON.parse(localStorage.getItem('selected_years') || '');
-
-        this.utilityService.emitNodeData.subscribe((value: any) => {
-
-            let data = {
-                countries: this.selectedCountries,
-                developmentId: "1,2",
-                governanceId: value.g_id,
-                taxonomyId: value.t_id,
-                year: this.currentYear,
-            };
-            let bubbleData = {
-                developmentId: "1,2",
-                governanceId: value.g_id,
-                taxonomyId: value.t_id,
-                ultimateId: value.u_id,
-                year: this.currentYear,
-            };
-
-            // console.log(data);
-            this.common.getOverviewRadarChart(data).subscribe((val) => {
-                // console.log(val);
-                // console.log(val);
-                this.sort = val.reduce(
-                    (
-                        group: { [x: string]: any[] },
-                        product: { country_name: any }
-                    ) => {
-                        const { country_name } = product;
-                        group[country_name] = group[country_name] ?? [];
-                        group[country_name].push(product);
-                        return group;
-                    },
-                    {}
-                );
-                let keys = Object.keys(this.sort);
-                this.newScore =[];
-                this.radarChart(this.sort);
-            });
-
-
-            this.common.getOverviewBubbleChart(bubbleData).subscribe((bub) => {
-                this.thirty = [];
-                this.sixty = [];
-                this.eighty = [];
-                this.hundred = [];
-                // console.log(bub);
-                bub.forEach((bubData: any)=> {
-                    if (bubData.percentage <= 30) {
-                        this.thirty.push({
-                            name: bubData.iso_code,
-                            value:1
-                        });                    }
-                    else if (bubData.percentage <= 60 && bubData.percentage > 30) {
-                        this.sixty.push({
-                            name: bubData.iso_code,
-                            value:1
-                        });                      }
-                    else if (bubData.percentage <= 80 && bubData.percentage > 60) {
-                        this.eighty.push({
-                            name: bubData.iso_code,
-                            value:1
-                        });
-                    }
-                    else if (bubData.percentage <= 100 && bubData.percentage > 80) {
-                        this.hundred.push({
-                            name: bubData.iso_code,
-                            value:1
-                        });
-                    }
-                })
-                this.bubbleChart();
-            });
-
-
-        });
-
-    }
-
-    ngAfterViewInit() {
-        this.nodeChart();
-        this.cd.detectChanges();
     }
 }
