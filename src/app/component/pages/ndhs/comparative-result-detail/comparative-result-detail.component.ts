@@ -1,13 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import * as am5 from '@amcharts/amcharts5';
-import am5themes_Animated from '@amcharts/amcharts5/themes/Animated';
-import * as am5map from '@amcharts/amcharts5/map';
-import am5geodata_worldLow from '@amcharts/amcharts5-geodata/worldLow';
-
-import * as am4core from '@amcharts/amcharts4/core';
-import * as am4charts from '@amcharts/amcharts4/charts';
-import am4themes_animated from '@amcharts/amcharts4/themes/animated';
-import * as am5xy from '@amcharts/amcharts5/xy';
+import * as $ from 'jquery';
 import { EChartsOption } from 'echarts/types/dist/echarts';
 import { FormControl } from '@angular/forms';
 import { CommonService } from 'src/app/services/common.service';
@@ -42,6 +35,10 @@ export class ComparativeResultDetailComponent implements OnInit {
     object: any = Object.keys;
     log: any = console.log;
     subscription: Subscription = new Subscription();
+    developmentId!: number;
+    ultimateId!: number;
+    isValue!: number;
+ 
 
     @ViewChild('mySelect') mySelect: ElementRef | any;
 
@@ -52,6 +49,21 @@ export class ComparativeResultDetailComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
+        $(document).ready(function () {
+            $('.vertical-tab-area').toggleClass('open');
+            $('.main-li li:first').addClass('active');
+            $('.main-li ul li:first').addClass('activelink');
+            $('.toggle-tab-button > button').on('click', function () {
+                $('.vertical-tab-area').toggleClass('open');
+            });
+            $('.sub-category li, .parent-li').click(function () {
+                $('.sub-category li, .parent-li').removeClass('activelink');
+                $(this).addClass('activelink');
+                var tagid = $(this).data('tag');
+                $('.list').removeClass('active').addClass('hide');
+                $('#' + tagid).addClass('active').removeClass('hide');
+            });
+        });
         this.apiService
             .getAllCountries()
             .subscribe((data) => (this.countriesToShow = data));
@@ -219,5 +231,34 @@ export class ComparativeResultDetailComponent implements OnInit {
             }
             this.toppings.setValue(this.mySelections);
         }
+    }
+    
+    toggle(num: number) {
+        this.isValue = num;
+    }
+
+    toggleProspective(event:any){
+        setTimeout(() => {
+            $('#prospective_development li:first').addClass('active');
+            $('#prospective_development ul li:first').addClass('activelink');
+            this.ultimateSelection(2,4);
+        }, 100);
+       
+    }
+
+    togglePresent(event:any){
+        setTimeout(() => {
+            $('#present_development li:first').addClass('active');
+            $('#present_development ul li:first').addClass('activelink');
+            this.ultimateSelection(1,2);
+        }, 100);
+       
+    }
+
+
+    ultimateSelection(development_id:number,ultimate_id:number){
+        this.developmentId = development_id;
+        this.ultimateId = ultimate_id;
+        // this.comparativeInformationChart();
     }
 }

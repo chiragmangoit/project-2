@@ -155,8 +155,18 @@
                                                     class="parent-li"
                                                     data-tag="one"
                                                     id="present_deve"
+                                                    (click)="toggle(1)"
+                                                    [ngClass]="{
+                                                        active: isValue == 1
+                                                    }"
                                                 >
-                                                    <a class="toggleSubmenu1"
+                                                    <a
+                                                        class="toggleSubmenu1"
+                                                        (click)="
+                                                            togglePresent(
+                                                                'present_development'
+                                                            )
+                                                        "
                                                         >Present Development</a
                                                     >
                                                 </li>
@@ -165,12 +175,26 @@
                                                         data-tag="two"
                                                         id="availability"
                                                     >
-                                                        <a class="md-text"
+                                                        <a
+                                                            class="md-text"
+                                                            (click)="
+                                                                ultimateSelection(
+                                                                    1,
+                                                                    2
+                                                                )
+                                                            "
                                                             >Availability</a
                                                         >
                                                     </li>
                                                     <li data-tag="three">
-                                                        <a class="md-text"
+                                                        <a
+                                                            class="md-text"
+                                                            (click)="
+                                                                ultimateSelection(
+                                                                    1,
+                                                                    1
+                                                                )
+                                                            "
                                                             >Readiness</a
                                                         >
                                                     </li>
@@ -183,8 +207,18 @@
                                                 <li
                                                     class="parent-li"
                                                     data-tag="four"
+                                                    (click)="toggle(2)"
+                                                    [ngClass]="{
+                                                        active: isValue == 2
+                                                    }"
                                                 >
-                                                    <a class="toggleSubmenu1"
+                                                    <a
+                                                        class="toggleSubmenu1"
+                                                        (click)="
+                                                            toggleProspective(
+                                                                'prospective_development'
+                                                            )
+                                                        "
                                                         >Prospective
                                                         Development</a
                                                     >
@@ -194,13 +228,27 @@
                                                         data-tag="five"
                                                         id="select_Capacity"
                                                     >
-                                                        <a class="md-text"
+                                                        <a
+                                                            class="md-text"
+                                                            (click)="
+                                                                ultimateSelection(
+                                                                    2,
+                                                                    4
+                                                                )
+                                                            "
                                                             >Capacity
                                                             Building</a
                                                         >
                                                     </li>
                                                     <li data-tag="six">
-                                                        <a class="md-text"
+                                                        <a
+                                                            class="md-text"
+                                                            (click)="
+                                                                ultimateSelection(
+                                                                    2,
+                                                                    3
+                                                                )
+                                                            "
                                                             >Development
                                                             Strategy</a
                                                         >

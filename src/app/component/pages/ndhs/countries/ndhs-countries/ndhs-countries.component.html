@@ -15,8 +15,8 @@
             mat-button disableRipple>
                 <div class="selected-language">
                     <mat-icon 
-                    >arrow_left</mat-icon><img src="assets/flags/in.png" />
-                    <!-- {{ country_name }} -->
+                    >arrow_left</mat-icon><img src="assets/flags/{{flag}}" />
+                    {{ countryName }}
                 </div>
             </button>
         </div>
@@ -36,8 +36,9 @@
                             <li (click)="drawer.toggle()" *ngFor="let countries of Allcountry">
                                 <div class="selected-language" style="cursor: pointer;"
                                     >
+                                    <a (click)="onSelectCountry(countries)">
                                     <img src="assets/flags/{{countries.flag}}" />
-                                    {{countries.country_name}}
+                                    {{countries.country_name}}</a>
                                 </div>
                             </li>
                         </ul>

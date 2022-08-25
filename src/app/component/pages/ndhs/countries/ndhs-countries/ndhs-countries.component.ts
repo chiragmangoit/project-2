@@ -11,7 +11,7 @@ import * as am4core from '@amcharts/amcharts4/core';
     templateUrl: './ndhs-countries.component.html',
     styleUrls: ['./ndhs-countries.component.css'],
 })
-export class NdhsCountriesComponent implements OnInit{
+export class NdhsCountriesComponent implements OnInit {
     countryId: any;
     currentYear: any;
     governanceId: any;
@@ -21,7 +21,7 @@ export class NdhsCountriesComponent implements OnInit{
     countryName: any;
     subscription: Subscription = new Subscription();
     Allcountry: any;
-
+    flag: any;
 
     constructor(
         private apiService: CommonService,
@@ -45,6 +45,9 @@ export class NdhsCountriesComponent implements OnInit{
     }
 
     getData() {
+        this.flag = JSON.parse(
+            localStorage.getItem('country_flag') || ''
+        );
         this.countryName = JSON.parse(
             localStorage.getItem('country_name') || ''
         );
@@ -68,6 +71,14 @@ export class NdhsCountriesComponent implements OnInit{
         );
     }
 
+    onSelectCountry(country:any) {
+        this.flag = country.flag;
+        this.countryName = country.country_name;
+        localStorage.setItem('country_flag', JSON.stringify(country.flag));
+        localStorage.setItem('country_id', country.country_id);
+        localStorage.setItem('country_name', JSON.stringify(country.country_name));
+        this.getData();
+    }
     ngOnDestroy(): void {
         this.subscription.unsubscribe();
         this.utilityService.header.next(false);
