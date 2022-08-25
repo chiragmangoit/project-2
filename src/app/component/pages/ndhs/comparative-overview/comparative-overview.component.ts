@@ -1,5 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import {
+    ChangeDetectorRef,
+    Component,
+    ElementRef,
+    OnInit,
+    ViewChild,
+} from '@angular/core';
+import { CommonService } from 'src/app/services/common.service';
+import { UtilitiesService } from 'src/app/services/utilities.service';
 import { EChartsOption } from 'echarts/types/dist/echarts';
+
 import * as $ from 'jquery';
 import data from 'src/assets/data/network.json';
 import * as echarts from 'echarts';
@@ -19,6 +28,38 @@ import * as am4plugins_forceDirected from '@amcharts/amcharts4/plugins/forceDire
     styleUrls: ['./comparative-overview.component.css'],
 })
 export class ComparativeOverviewComponent implements OnInit {
+    chartOptionRadar: any;
+    countryName: any;
+    countryId: any;
+    currentYear: any;
+    governanceId: any;
+    developmentId: any;
+    taxonomyId: any;
+    selectedYear: any;
+    selectedCountries: any;
+    availibilityScore: any;
+    capacityScore: any;
+    developmentScore: any;
+    readinessScore: any;
+    compareCountry: any;
+    score: any;
+    newScore: any = [];
+    sort: any;
+    chartOptionNode: any;
+    thirty:any = [];
+    sixty:any = [];
+    eighty:any = [];
+    hundred:any = [];
+    toggle:any = true;
+
+
+    @ViewChild('main') main: ElementRef | any;
+    constructor(
+        private common: CommonService,
+        private utilityService: UtilitiesService,
+        private cd: ChangeDetectorRef
+    ) {}
+
     graph = {
         nodes: [
             {
@@ -1394,456 +1435,70 @@ export class ComparativeOverviewComponent implements OnInit {
         ],
     };
 
-    chartOptionNode: EChartsOption = {
-        tooltip: {},
-        legend: [
-            {
-                // selectedMode: 'single',
-                data: this.graph.categories.map(function (a) {
-                    return a.name;
-                }),
-            },
-        ],
-        animationDuration: 1500,
-        animationEasingUpdate: 'quinticInOut',
-        series: [
-            {
-                name: 'Les Miserables',
-                type: 'graph',
-                layout: 'none',
-                data: this.graph.nodes,
-                links: this.graph.links,
-                categories: this.graph.categories,
-                roam: true,
-                label: {
-                    position: 'right',
-                    formatter: '{b}',
-                },
-                lineStyle: {
-                    color: 'source',
-                    curveness: 0.3,
-                },
-                emphasis: {
-                    focus: 'adjacency',
-                    lineStyle: {
-                        width: 1,
-                    },
-                },
-            },
-        ],
-    };
 
-    bubble = {
-        type: 'force',
-        categories: [
-            {
-                name: 'HTMLElement',
-                keyword: {},
-                base: 'HTMLElement',
-            },
-            {
-                name: 'WebGL',
-                keyword: {},
-                base: 'WebGLRenderingContext',
-            },
-            {
-                name: 'SVG',
-                keyword: {},
-                base: 'SVGElement',
-            },
-            {
-                name: 'CSS',
-                keyword: {},
-                base: 'CSSRule',
-            },
-            {
-                name: 'Other',
-                keyword: {},
-            },
-        ],
-        nodes: [
-            {
-                name: 'AnalyserNode',
-                value: 1,
-                category: 4,
-            },
-            {
-                name: 'AudioNode',
-                value: 1,
-                category: 4,
-            },
-            {
-                name: 'Uint8Array',
-                value: 1,
-                category: 4,
-            },
-            {
-                name: 'Float32Array',
-                value: 1,
-                category: 4,
-            },
-            {
-                name: 'ArrayBuffer',
-                value: 1,
-                category: 4,
-            },
-            {
-                name: 'ArrayBufferView',
-                value: 1,
-                category: 4,
-            },
-            {
-                name: 'Attr',
-                value: 1,
-                category: 4,
-            },
-            {
-                name: 'Node',
-                value: 1,
-                category: 4,
-            },
-            {
-                name: 'Element',
-                value: 1,
-                category: 4,
-            },
-            {
-                name: 'AudioBuffer',
-                value: 1,
-                category: 4,
-            },
-            {
-                name: 'AudioBufferCallback',
-                value: 1,
-                category: 4,
-            },
-            {
-                name: 'AudioBufferSourceNode',
-                value: 1,
-                category: 4,
-            },
-            {
-                name: 'AudioSourceNode',
-                value: 1,
-                category: 4,
-            },
-            {
-                name: 'AudioGain',
-                value: 1,
-                category: 4,
-            },
-            {
-                name: 'AudioParam',
-                value: 1,
-                category: 4,
-            },
-            {
-                name: 'AudioContext',
-                value: 1,
-                category: 4,
-            },
-            {
-                name: 'AudioDestinationNode',
-                value: 1,
-                category: 4,
-            },
-            {
-                name: 'AudioListener',
-                value: 1,
-                category: 4,
-            },
-            {
-                name: 'BiquadFilterNode',
-                value: 1,
-                category: 4,
-            },
-            {
-                name: 'ChannelMergerNode',
-                value: 1,
-                category: 4,
-            },
-            {
-                name: 'ChannelSplitterNode',
-                value: 1,
-                category: 4,
-            },
-            {
-                name: 'ConvolverNode',
-                value: 1,
-                category: 4,
-            },
-            {
-                name: 'DelayNode',
-                value: 1,
-                category: 4,
-            },
-            {
-                name: 'DynamicsCompressorNode',
-                value: 1,
-                category: 4,
-            },
-            {
-                name: 'GainNode',
-                value: 1,
-                category: 4,
-            },
-            {
-                name: 'MediaElementAudioSourceNode',
-                value: 1,
-                category: 4,
-            },
-            {
-                name: 'MediaStreamAudioDestinationNode',
-                value: 1,
-                category: 4,
-            },
-            {
-                name: 'MediaStreamAudioSourceNode',
-                value: 1,
-                category: 4,
-            },
-            {
-                name: 'OscillatorNode',
-                value: 1,
-                category: 4,
-            },
-        ],
-        links: [
-            {
-                source: 0,
-                target: 1,
-            },
-            {
-                source: 0,
-                target: 2,
-            },
-            {
-                source: 0,
-                target: 3,
-            },
-            {
-                source: 4,
-                target: 4,
-            },
-            {
-                source: 5,
-                target: 4,
-            },
-            {
-                source: 6,
-                target: 7,
-            },
-            {
-                source: 6,
-                target: 8,
-            },
-            {
-                source: 9,
-                target: 3,
-            },
-            {
-                source: 10,
-                target: 9,
-            },
-            {
-                source: 11,
-                target: 12,
-            },
-            {
-                source: 11,
-                target: 9,
-            },
-            {
-                source: 11,
-                target: 13,
-            },
-            {
-                source: 11,
-                target: 14,
-            },
-            {
-                source: 15,
-                target: 16,
-            },
-            {
-                source: 15,
-                target: 17,
-            },
-            {
-                source: 15,
-                target: 0,
-            },
-            {
-                source: 15,
-                target: 18,
-            },
-            {
-                source: 15,
-                target: 9,
-            },
-            {
-                source: 15,
-                target: 11,
-            },
-            {
-                source: 15,
-                target: 19,
-            },
-            {
-                source: 15,
-                target: 20,
-            },
-            {
-                source: 15,
-                target: 21,
-            },
-            {
-                source: 15,
-                target: 22,
-            },
-            {
-                source: 15,
-                target: 23,
-            },
-            {
-                source: 15,
-                target: 24,
-            },
-            {
-                source: 15,
-                target: 25,
-            },
-            {
-                source: 15,
-                target: 26,
-            },
-            {
-                source: 15,
-                target: 27,
-            },
-            {
-                source: 15,
-                target: 28,
-            },
-            {
-                source: 15,
-                target: 29,
-            },
-            {
-                source: 15,
-                target: 30,
-            },
-            {
-                source: 15,
-                target: 31,
-            },
-            {
-                source: 15,
-                target: 32,
-            },
-            {
-                source: 15,
-                target: 4,
-            },
-            {
-                source: 16,
-                target: 1,
-            },
-            {
-                source: 13,
-                target: 14,
-            },
-            {
-                source: 1,
-                target: 15,
-            },
-            {
-                source: 1,
-                target: 1,
-            },
-            {
-                source: 1,
-                target: 14,
-            },
-            {
-                source: 14,
-                target: 3,
-            },
-            {
-                source: 12,
-                target: 1,
-            },
-            {
-                source: 18,
-                target: 1,
-            },
-            {
-                source: 18,
-                target: 14,
-            },
-            {
-                source: 18,
-                target: 3,
-            },
-            {
-                source: 33,
-                target: 34,
-            },
-            {
-                source: 35,
-                target: 33,
-            },
-            {
-                source: 35,
-                target: 36,
-            },
-            {
-                source: 35,
-                target: 37,
-            },
-            {
-                source: 35,
-                target: 38,
-            },
-            {
-                source: 35,
-                target: 39,
-            },
-        ],
-    };
-    bubblechart: EChartsOption = {
-            legend: {
-                data: ['HTMLElement', 'WebGL', 'SVG', 'Other'],
-                icon: 'circle',
-            },
+    toggleCharts() {
+        this.toggle = !this.toggle;
+    }
+
+    nodeChart() {
+        let chartDom = this.main.nativeElement;
+        let nodechart = echarts.init(chartDom);
+        let option: any;
+        option = {
+            tooltip: {},
+            legend: [
+                {
+                    // selectedMode: 'single',
+                    data: this.graph.categories.map(function (a) {
+                        return a.name;
+                    }),
+                },
+            ],
+            animationDuration: 1500,
+            animationEasingUpdate: 'quinticInOut',
             series: [
                 {
+                    name: 'Les Miserables',
                     type: 'graph',
-                    layout: 'force',
-                    animation: false,
+                    layout: 'none',
+                    data: this.graph.nodes,
+                    links: this.graph.links,
+                    categories: this.graph.categories,
+                    roam: true,
                     label: {
                         position: 'right',
                         formatter: '{b}',
                     },
-                    draggable: true,
-                    data: this.bubble.nodes.map(function (
-                        node: any,
-                        idx: number
-                    ) {
-                        node.id = idx;
-                        return node;
-                    }),
-                    categories: this.bubble.categories,
-                    force: {
-                        edgeLength: 5,
-                        repulsion: 90,
-                        gravity: 0.8,
+                    lineStyle: {
+                        color: 'source',
+                        curveness: 0.3,
+                    },
+                    emphasis: {
+                        focus: 'adjacency',
+                        lineStyle: {
+                            width: 1,
+                        },
                     },
                 },
             ],
-    };
+        };
+        nodechart.setOption(option);
 
-
+        nodechart.on('click', (e: any) => {
+            if (e.borderColor == undefined) {
+                // console.log(e.data);
+                this.utilityService.emitNodeData.next(e.data);
+            }
+            this.radarChart(this.sort);
+            // console.log(e.data.t_id)
+            // this.governanceId = e.data.g_id;
+            // this.governanceId = e.data.g_id;
+            // this.scoreGenerator(rtId);
+            // this.graph.nodes.forEach((nodeData)=> {
+            //     console.log(nodeData.u_id);
+            // })
+        });
+    }
 
     bar: EChartsOption = {
         dataset: {
@@ -1858,18 +1513,18 @@ export class ComparativeOverviewComponent implements OnInit {
         grid: { containLabel: true },
         xAxis: { name: 'amount' },
         yAxis: { type: 'category' },
-          visualMap: {
-    // orient: 'horizontal',
-    top: 'center',
-    min: 10,
-    max: 100,
-    // text: ['High Score', 'Low Score'],
-    // Map the score column to color
-    dimension: 0,
-    inRange: {
-      color: ['#65B581', '#FFCE34', '#FD665F']
-    }
-  },
+        visualMap: {
+            // orient: 'horizontal',
+            top: 'center',
+            min: 10,
+            max: 100,
+            // text: ['High Score', 'Low Score'],
+            // Map the score column to color
+            dimension: 0,
+            inRange: {
+                color: ['#65B581', '#FFCE34', '#FD665F'],
+            },
+        },
         emphasis: {
             disabled: true,
         },
@@ -1886,256 +1541,308 @@ export class ComparativeOverviewComponent implements OnInit {
         ],
     };
 
+    // radarChart() {
+    //     this.chartOptionRadar = {
+    //         title: {},
+    //         legend: {
+    //             data: ['Allocated Budget', 'Actual Spending'],
+    //         },
+    //         radar: {
+    //             shape: 'circle',
+    //             splitArea: {
+    //                 areaStyle: {
+    //                     color: ['#FFFAE3', '#F0EFEF'],
+    //                     shadowColor: 'rgba(0, 0, 0, 0)',
+    //                     shadowBlur: 10,
+    //                 },
+    //             },
+    //             indicator: [
+    //                 { text: 'Availability', max: 100 },
+    //                 { text: 'Capacity Building', max: 100 },
+    //                 { text: 'Development Strategy', max: 100 },
+    //                 { text: 'Readiness', max: 100 },
+    //             ],
+    //         },
+    //         series: [
+    //             {
+    //                 name: 'Budget vs spending',
+    //                 type: 'radar',
+    //                 data: [
+    //                     {
+    //                         value: [this.aScore, this.cScore, this.dScore, this.aScore],
+    //                         name: 'Allocated Budget',
+    //                     },
+    //                     {
+    //                         value: [2, 2, 2, 2],
+    //                         name: 'Actual Spending',
+    //                         areaStyle: {},
+    //                     },
+    //                 ],
+    //             },
+    //         ],
+    //     };
+    // }
 
+    radarChart(sort: any) {
+        let keys = Object.keys(sort);
+        keys.forEach((key) => {
+            sort[key].forEach((element: any) => {
+                this.compareCountry = element.country_name;
+                if (element.ultimate_field == 'Readiness') {
+                    this.readinessScore = element.percentage;
+                } else if (element.ultimate_field == 'Availability') {
+                    this.availibilityScore = element.percentage;
+                } else if (element.ultimate_field == 'Capacity Building') {
+                    this.capacityScore = element.percentage;
+                } else if (element.ultimate_field == 'Development Strategy') {
+                    this.developmentScore = element.percentage;
+                }
+            });
+            this.score = [
+                this.availibilityScore,
+                this.capacityScore,
+                this.developmentScore,
+                this.readinessScore,
+                // compareCountry: this.compareCountry,
+            ];
+            this.newScore.push(this.score);
+        });
+        // console.log(this.newScore);
 
-
-
-    countryName: any;
-    countryId: any;
-    currentYear: any;
-    governanceId: any;
-    developmentId: any;
-
-
-
-    radarChart(){
-        this.countryName = JSON.parse(
-            localStorage.getItem('country_name') || ''
-        );
-        this.developmentId = JSON.parse(localStorage.getItem('developmentId') || '');
-        this.countryId = JSON.parse(localStorage.getItem('country_id') || '');
-        this.currentYear = JSON.parse(localStorage.getItem('year') || '');
-        this.governanceId = JSON.parse(
-            localStorage.getItem('governance_id') || ''
-        );
-        let years  = JSON.parse(localStorage.getItem("selected_years") || '');
-
-
-    }
-
-
-
-
-    chartOptionRadar: EChartsOption = {
-        title: {},
-        legend: {
-            data: ['Allocated Budget', 'Actual Spending'],
-        },
-        radar: {
-            shape: 'circle',
-            splitArea: {
-                areaStyle: {
-                    color: ['#FFFAE3', '#F0EFEF'],
-                    shadowColor: 'rgba(0, 0, 0, 0)',
-                    shadowBlur: 10,
-                },
+        this.chartOptionRadar = {
+            title: {},
+            legend: {
+                data: ['Allocated Budget', 'Actual Spending'],
             },
-            indicator: [
-                { name: 'Sales', max: 6500 },
-                { name: 'Administration', max: 16000 },
-                { name: 'Information Technology', max: 30000 },
-                { name: 'Customer Support', max: 38000 },
-            ],
-        },
-        series: [
-            {
-                name: 'Budget vs spending',
-                type: 'radar',
-                data: [
-                    {
-                        value: [4200, 9000, 20000, 32000, 50000, 180000],
-                        name: 'Allocated Budget',
+            radar: {
+                shape: 'circle',
+                splitArea: {
+                    areaStyle: {
+                        color: ['#FFFAE3', '#F0EFEF'],
+                        shadowColor: 'rgba(0, 0, 0, 0)',
+                        shadowBlur: 10,
                     },
-                    {
-                        value: [5000, 14000, 28000, 26000, 42000, 21000],
-                        name: 'Actual Spending',
-                        areaStyle: {},
-                    },
+                },
+                center: ['50%', '50%'],
+                radius: 110,
+                startAngle: 90,
+                splitNumber: 5,
+                axisName: {
+                    color: '#707070',
+                    fontSize: '10',
+                },
+                indicator: [
+                    { text: 'Availability', max: 100 },
+                    { text: 'Capacity Building', max: 100 },
+                    { text: 'Development Strategy', max: 100 },
+                    { text: 'Readiness', max: 100 },
                 ],
             },
-        ],
-    };
+            series: [
+                {
+                    type: 'radar',
+                    emphasis: {
+                        lineStyle: {
+                            width: 4,
+                        },
+                    },
+                    data: [
+                        {
+                            value: this.newScore[1],
+                            name: 'Allocated Budget',
+                        },
+                        {
+                            value: this.newScore[0],
+                            name: 'Actual Spending',
+                            areaStyle: {},
+                        },
+                    ],
+                },
+            ],
+        };
+    }
 
-    ngOnInit(): void {
+    bubbleChart() {
 
         am4core.useTheme(am4themes_animated);
 
         var chart = am4core.create(
-          "chartdiv",
-          am4plugins_forceDirected.ForceDirectedTree
+            'chartdiv',
+            am4plugins_forceDirected.ForceDirectedTree
         );
 
         var series = chart.series.push(
-          new am4plugins_forceDirected.ForceDirectedSeries()
+            new am4plugins_forceDirected.ForceDirectedSeries()
         );
 
         series.data = [
-          {
-            id: "1",
-            name: "25%",
-            value: 2,
-            fixed: true,
-            color: "#FA8E15",
-            x: am4core.percent(40),
-            y: am4core.percent(40),
-            children: [{
-              name: 'Stale', value: 1
-            }, {
-              name: 'Cardboard', value: 1
-            }, {
-              name: 'Papery', value: 1
-            }, {
-              name: 'Woody', value: 1
-            }, {
-              name: 'Moldy/Damp', value: 1
-            }, {
-              name: 'Musty/Dusty', value: 1
-            }, {
-              name: 'Musty/Earthy', value: 1
-            }, {
-              name: 'Rubber', value: 1
-            }]
-          },
-          {
-            id: "2",
-            name: "100%",
-            color: "#00306C",
-            fixed: true,
-            value: 2,
-            x: am4core.percent(50),
-            y: am4core.percent(25),
-            children: [{
-              name: 'Stale', value: 1
-            }, {
-              name: 'Cardboard', value: 1
-            }, {
-              name: 'Papery', value: 1
-            }, {
-              name: 'Woody', value: 1
-            }, {
-              name: 'Moldy/Damp', value: 1
-            }, {
-              name: 'Musty/Dusty', value: 1
-            }, {
-              name: 'Musty/Earthy', value: 1
-            }, {
-              name: 'Rubber', value: 1
-            }]
-          },
-          {
-            id: "3",
-            name: "80%",
-            color: "#4A92EC",
-            fixed: true,
-            value: 2,
-            x: am4core.percent(50),
-            y: am4core.percent(50),
-            children: [
-              {
-                name: "Stale",
-                value: 1
-              },
-              {
-                name: "Cardboard",
-                value: 1
-              },
-              {
-                name: "Papery",
-                value: 1
-              },
-              {
-                name: "Woody",
-                value: 1
-              },
-              {
-                name: "Moldy/Damp",
-                value: 1
-              },
-              {
-                name: "Musty/Dusty",
-                value: 1
-              },
-              {
-                name: "Musty/Earthy",
-                value: 1
-              },
-              {
-                name: "Rubber",
-                value: 1
-              }
-            ]
-          },
-          {
-            id: "4",
-            name: "60%",
-            color: "#4AEC9B",
-            fixed: true,
-            value: 2,
-            x: am4core.percent(60),
-            y: am4core.percent(40),
-            children: [{
-              name: 'Stale', value: 1
-            }, {
-              name: 'Cardboard', value: 1
-            }, {
-              name: 'Papery', value: 1
-            }, {
-              name: 'Woody', value: 1
-            }, {
-              name: 'Moldy/Damp', value: 1
-            }, {
-              name: 'Musty/Dusty', value: 1
-            }, {
-              name: 'Musty/Earthy', value: 1
-            }, {
-              name: 'Rubber', value: 1
-            }]
-          },
-          {
-            name: "",
-            fixed: true,
-            value: 1,
-            x: am4core.percent(150),
-            y: am4core.percent(40),
-            children: [
-              {
-                name: "",
-                value: 4
-              }
-            ]
-          }
+            {
+                id: '1',
+                name: '30%',
+                value: 1,
+                fixed: true,
+                color: '#FA8E15',
+                x: am4core.percent(40),
+                y: am4core.percent(40),
+                children: this.thirty,
+            },
+            {
+                id: '2',
+                name: '100%',
+                color: '#00306C',
+                fixed: true,
+                value: 1,
+                x: am4core.percent(50),
+                y: am4core.percent(25),
+                children: this.hundred,
+            },
+            {
+                id: '3',
+                name: '80%',
+                color: '#4A92EC',
+                fixed: true,
+                value: 1,
+                x: am4core.percent(50),
+                y: am4core.percent(50),
+                children: this.eighty,
+            },
+            {
+                id: '4',
+                name: '60%',
+                color: '#4AEC9B',
+                fixed: true,
+                value: 1,
+                x: am4core.percent(60),
+                y: am4core.percent(40),
+                children: this.sixty,
+            },
+            {
+                id: '5',
+                name: '',
+                color: '#fff',
+                fixed: true,
+                value: 3,
+                x: am4core.percent(550),
+                y: am4core.percent(25),
+            }
         ];
 
+        series.dataFields.linkWith = 'linkWith';
+        series.dataFields.name = 'name';
+        series.dataFields.id = 'id';
+        series.dataFields.value = 'value';
+        series.dataFields.children = 'children';
+        series.dataFields.fixed = 'fixed';
+        series.dataFields.color = 'color';
+        // networkSeries.nodes.template.width = 100;
 
+        series.nodes.template.propertyFields.x = 'x';
+        series.nodes.template.propertyFields.y = 'y';
 
-        series.dataFields.linkWith = "linkWith";
-        series.dataFields.name = "name";
-        series.dataFields.id = "name";
-        series.dataFields.value = "value";
-        series.dataFields.children = "children";
-        series.dataFields.fixed = "fixed";
-
-        series.nodes.template.propertyFields.x = "x";
-        series.nodes.template.propertyFields.y = "y";
-
-        series.nodes.template.tooltipText = "{name}";
+        series.nodes.template.tooltipText = '{name}';
         series.nodes.template.fillOpacity = 1;
 
-        series.nodes.template.label.text = "{name}"
+        series.nodes.template.label.text = '{name}';
         series.fontSize = 8;
-        series.maxLevels = 2;
+        // networkSeries.maxLevels = 3;
         series.nodes.template.label.hideOversized = true;
-        series.nodes.template.label.truncate = false;
+        series.nodes.template.label.truncate = true;
+        series.links.template.distance = 0;
+        series.links.template.disabled = true;
+        // series.nodes.template.interactionsEnabled = false;
+
+        series.nodes.template.strokeWidth = 0;
+        series.links.template.strokeOpacity = 0;
+        series.nodes.template.label.fill = am4core.color('#fff');
+
+        series.nodes.template.outerCircle.strokeOpacity = 0;
+        series.nodes.template.outerCircle.fillOpacity = 0;
+    }
+
+    ngOnInit(): void {
+        this.selectedCountries = localStorage.getItem('selected_country'),
+        console.log(this.selectedCountries);
+        this.currentYear = JSON.parse(localStorage.getItem('selected_years') || '');
+
+        this.utilityService.emitNodeData.subscribe((value: any) => {
+
+            let data = {
+                countries: this.selectedCountries,
+                developmentId: "1,2",
+                governanceId: value.g_id,
+                taxonomyId: value.t_id,
+                year: this.currentYear,
+            };
+            let bubbleData = {
+                developmentId: "1,2",
+                governanceId: value.g_id,
+                taxonomyId: value.t_id,
+                ultimateId: value.u_id,
+                year: this.currentYear,
+            };
+
+            // console.log(data);
+            this.common.getOverviewRadarChart(data).subscribe((val) => {
+                // console.log(val);
+                // console.log(val);
+                this.sort = val.reduce(
+                    (
+                        group: { [x: string]: any[] },
+                        product: { country_name: any }
+                    ) => {
+                        const { country_name } = product;
+                        group[country_name] = group[country_name] ?? [];
+                        group[country_name].push(product);
+                        return group;
+                    },
+                    {}
+                );
+                let keys = Object.keys(this.sort);
+                this.newScore =[];
+                this.radarChart(this.sort);
+            });
 
 
+            this.common.getOverviewBubbleChart(bubbleData).subscribe((bub) => {
+                this.thirty = [];
+                this.sixty = [];
+                this.eighty = [];
+                this.hundred = [];
+                // console.log(bub);
+                bub.forEach((bubData: any)=> {
+                    if (bubData.percentage <= 30) {
+                        this.thirty.push({
+                            name: bubData.iso_code,
+                            value:1
+                        });                    }
+                    else if (bubData.percentage <= 60 && bubData.percentage > 30) {
+                        this.sixty.push({
+                            name: bubData.iso_code,
+                            value:1
+                        });                      }
+                    else if (bubData.percentage <= 80 && bubData.percentage > 60) {
+                        this.eighty.push({
+                            name: bubData.iso_code,
+                            value:1
+                        });
+                    }
+                    else if (bubData.percentage <= 100 && bubData.percentage > 80) {
+                        this.hundred.push({
+                            name: bubData.iso_code,
+                            value:1
+                        });
+                    }
+                })
+                this.bubbleChart();
+            });
 
 
+        });
 
+    }
 
-        let years  = JSON.parse(localStorage.getItem("selected_years") || '');
-        console.log(years);
-
-        this.developmentId = JSON.parse(localStorage.getItem('developmentId') || '');
-        console.log(this.developmentId)
+    ngAfterViewInit() {
+        this.nodeChart();
+        this.cd.detectChanges();
     }
 }
