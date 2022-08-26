@@ -46,7 +46,7 @@
                                 <button
                                     mat-raised-button
                                     (click)="toggleCharts()"
-                                >{{ toggle ? 'bar Chart' : 'Bubble Chart'}}</button>
+                                >{{ toggle ? 'Bar Chart' : 'Bubble Chart'}}</button>
                             </div>
                             <div class="table-com">
                                 <div>
@@ -57,21 +57,15 @@
                                             toggle ? 'showChart' : 'hideChart'
                                         "
                                         id="chartdiv2"
-                                        style="
-                                            width: 500px;
-                                            height: 250px;
-                                            margin: 0 auto;
-                                        "
+
                                     >
                                         <div
-                                            echarts
-                                            [options]="bar"
-                                            class="deo-chart"
+                                        id="chartdiv2"
                                             style="
-                                            width: 500px;
+                                            width: 400px;
                                             height: 250px;
-                                            margin: 0 auto;
-                                        "></div>
+                                            margin: 40px auto;
+                                        ">  <div id="barGraph"></div> </div>
                                     </div>
                                 </div>
                                 <div>
@@ -80,13 +74,13 @@
                                             toggle ? 'hideChart' : 'showChart'
                                         "
                                         id="chartdiv1"
-                                        style="
-                                            width: 400px;
-                                            height: 250px;
-                                            margin: 0 auto;
-                                        "
+
                                     >
-                                        <div id="chartdiv"></div>
+                                        <div id="bubble" style="
+                                        width: 400px;
+                                        height: 250px;
+                                        margin: 0 auto;
+                                    "></div>
                                     </div>
                                 </div>
                             </div>
@@ -134,8 +128,8 @@
                                                 <h3>Indicators</h3>
                                                 <h3>Comparison</h3>
                                             </div>
-                                            <mat-accordion>
-                                                <mat-expansion-panel hideToggle>
+                                            <mat-accordion >
+                                                <mat-expansion-panel  disabled expanded="true" hideToggle>
                                                     <mat-expansion-panel-header>
                                                         <mat-panel-title>
                                                         </mat-panel-title>
@@ -147,10 +141,10 @@
                                                     <div
                                                         class="accordion-content"
                                                     >
-                                                        <div
+                                                        <div *ngIf="sortedTableData"
                                                             class="content-row"
                                                         >
-                                                            <mat-accordion>
+                                                            <mat-accordion *ngFor="let data of object(sortedTableData)">
                                                                 <div
                                                                     class="content-inner"
                                                                 >
@@ -161,11 +155,12 @@
                                                                             <div
                                                                                 class="left-content col-md-7"
                                                                             >
-                                                                                <mat-panel-title>
+                                                                                <mat-panel-title
+                                                                                >{{sortedTableData[data][0].indicator_name}}
                                                                                     <!-- {{indicator[0]}} -->
                                                                                 </mat-panel-title>
                                                                             </div>
-                                                                            <div
+                                                                            <!-- <div
                                                                                 class="right-content col-md-4"
                                                                             >
                                                                                 <div
@@ -179,10 +174,11 @@
                                                                                     <div
                                                                                         class="rating"
                                                                                     >
-                                                                                        <!-- <ng-container *ngFor="let dash of dash_array;let i=index">
-                                                                                            <span *ngIf=" dash <= (((indicator[1][0].actual_score/indicator[1][0].indicator_score) * 100)/20)" class="green"></span>
-                                                                                            <span *ngIf=" dash > (((indicator[1][0].actual_score/indicator[1][0].indicator_score) * 100)/20)" class="gray"></span>
-                                                                                        </ng-container> -->
+                                                                                        <ng-container *ngFor="let dash of tableScoreArray;let i=index">
+
+                                                                                            <span *ngIf=" dash <= (((sortedTableData[data][0].actual_score/sortedTableData[data][0].indicator_score) * 100)/20)" class="green"></span>
+                                                                                            <span *ngIf=" dash > (((sortedTableData[data][0].actual_score/sortedTableData[data][0].indicator_score) * 100)/20)" class="gray"></span>
+                                                                                        </ng-container>
                                                                                     </div>
                                                                                 </div>
                                                                                 <div
@@ -200,25 +196,25 @@
                                                                                             <span *ngIf=" dash <= (((indicator[1][1].actual_score/indicator[1][1].indicator_score) * 100)/20)" class="green"></span>
                                                                                             <span *ngIf=" dash > (((indicator[1][1].actual_score/indicator[1][1].indicator_score) * 100)/20)" class="gray"></span>
                                                                                         </ng-container> -->
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
+                                                                                    <!-- </div> -->
+                                                                                <!-- </div> -->
+                                                                            <!-- </div> -->
                                                                             <mat-panel-description>
                                                                                 <mat-icon
                                                                                     >arrow_drop_down</mat-icon
                                                                                 >
                                                                             </mat-panel-description>
                                                                         </mat-expansion-panel-header>
-                                                                        <div
+                                                                        <div  *ngFor="let innerData of sortedTableData[data]; let i = index"
                                                                             class="content-row"
                                                                         >
                                                                             <div
                                                                                 class="query-right-content col-md-12"
                                                                             >
-                                                                                <div
+                                                                                <div *ngIf=" i < sortedTableData[data].length/2 "
                                                                                     class="query-name col-md-7"
                                                                                 >
-                                                                                    <!-- {{indicator[1][0].question}} -->
+                                                                                    {{innerData.question}}
                                                                                 </div>
                                                                                 <div
                                                                                     class="country-1 col-md-2"
@@ -226,13 +222,13 @@
                                                                                     <div
                                                                                         class="rating"
                                                                                     >
-                                                                                        <span
+                                                                                        <span *ngIf="innerData.status == 'Yes'"
                                                                                             class="green success"
                                                                                         ></span>
-                                                                                        <span
+                                                                                        <span *ngIf="innerData.status == 'No'"
                                                                                             class="alert-red danger"
                                                                                         ></span>
-                                                                                        <span
+                                                                                        <span *ngIf="innerData.status == undefined"
                                                                                             class="gray disable-status"
                                                                                         ></span>
                                                                                     </div>

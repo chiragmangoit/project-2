@@ -52,6 +52,11 @@ export class ComparativeOverviewComponent implements OnInit {
     hundred: any = [];
     toggle: any = true;
 
+    object = Object.keys
+    barchartData: any;
+    sortedTableData: any;
+    tableScoreArray: any;
+
     @ViewChild('main') main: ElementRef | any;
     constructor(
         private common: CommonService,
@@ -1435,6 +1440,9 @@ export class ComparativeOverviewComponent implements OnInit {
     };
 
     ngOnInit(): void {
+
+        this.tableScoreArray = [1,2,3,4,5];
+
         (this.selectedCountries = localStorage.getItem('selected_country')),
             console.log(this.selectedCountries);
         this.currentYear = JSON.parse(
@@ -1456,6 +1464,66 @@ export class ComparativeOverviewComponent implements OnInit {
                 ultimateId: value.u_id,
                 year: this.currentYear,
             };
+
+            let barData = {
+                countries: this.selectedCountries,
+                developmentId: value.d_id,
+                governanceId: value.g_id,
+                ultimateId: value.u_id,
+                taxonomyId: value.t_id,
+            };
+
+            let tableChart = {
+                countries: this.selectedCountries,
+                developmentId: parseInt(value.d_id),
+                governanceId: value.g_id,
+                taxonomyId: value.t_id,
+                ultimateId: value.u_id,
+                year: value.year,
+            };
+
+            this.common.getTaxonomyTabledetails(tableChart).subscribe((val) => {
+                // console.log(val);
+
+                val.forEach((tableSort: any)=> {
+                    // console.log(tableSort);
+
+                    this.sortedTableData = val.reduce(
+                        (
+                            group: { [x: string]: any[] },
+                            product: { indicator_id: any }
+                        ) => {
+                            const { indicator_id } = product;
+                            group[indicator_id] = group[indicator_id] ?? [];
+                            group[indicator_id].push(product);
+                            return group;
+                        },
+                        {}
+                        );
+                    })
+                    // console.log(this.sortedTableData);
+
+                // console.log(val);
+                // val.forEach((element: any) => {
+                //     console.log(element);
+                // });
+            });
+
+            this.common.getOverviewBarChart(barData).subscribe((val) => {
+                this.barchartData = [];
+                val.forEach((element: any) => {
+                   this.barchartData.push({
+                    isoCode: element.iso_code,
+                    percentage:element.percentage
+                   })
+
+                })
+                console.log(this.barchartData);
+
+                // val.forEach((element: any) => {
+                //     console.log(element);
+                // });
+            });
 
             // console.log(data);
             this.common.getOverviewRadarChart(data).subscribe((val) => {
@@ -1519,6 +1587,10 @@ export class ComparativeOverviewComponent implements OnInit {
                 this.bubbleChart();
             });
         });
+
+        // this.BarChart();
+
+        this.barChart();
     }
 
     ngAfterViewInit() {
@@ -1583,46 +1655,116 @@ export class ComparativeOverviewComponent implements OnInit {
         });
     }
 
-    bar: EChartsOption = {
-        dataset: {
-            source: [
-                ['score', 'amount', 'product'],
-                [80, 80, 'Matcha Latte'],
-                [20, 20, 'Milk Tea'],
-                [50, 50, 'Cheese Cocoa'],
-                [30, 30, 'Cheese Brownie'],
-            ],
-        },
-        grid: { containLabel: true },
-        xAxis: { name: 'amount' },
-        yAxis: { type: 'category' },
-        visualMap: {
-            // orient: 'horizontal',
-            top: 'center',
-            min: 10,
-            max: 100,
-            // text: ['High Score', 'Low Score'],
-            // Map the score column to color
-            dimension: 0,
-            inRange: {
-                color: ['#65B581', '#FFCE34', '#FD665F'],
-            },
-        },
-        emphasis: {
-            disabled: true,
-        },
-        series: [
+    barChart() {
+        am4core.useTheme(am4themes_animated);
+        // Themes end
+
+        let chart = am4core.create('barGraph', am4charts.XYChart);
+        chart.padding(0, 0, 0, 0);
+
+        let categoryAxis = chart.yAxes.push(new am4charts.CategoryAxis());
+        categoryAxis.renderer.grid.template.location = 0;
+        categoryAxis.dataFields.category = 'network';
+        categoryAxis.renderer.minGridDistance = 1;
+        categoryAxis.renderer.inversed = false;
+        categoryAxis.renderer.grid.template.disabled = true;
+
+        let valueAxis = chart.xAxes.push(new am4charts.ValueAxis());
+        valueAxis.min = 0;
+
+        let series = chart.series.push(new am4charts.ColumnSeries());
+        series.dataFields.categoryY = 'network';
+        series.dataFields.valueX = 'MAU';
+        series.tooltipText = '{valueX.value}';
+        series.columns.template.strokeOpacity = 0;
+        series.columns.template.column.cornerRadiusBottomRight = 5;
+        series.columns.template.column.cornerRadiusTopRight = 5;
+
+
+        let labelBullet = series.bullets.push(new am4charts.LabelBullet());
+        labelBullet.label.horizontalCenter = 'left';
+        labelBullet.label.dx = 10;
+
+        setTimeout(() => {
+
+            console.log(labelBullet.clones.values);
+        }, 1000);
+        labelBullet.label.html = `
+        <div style="margin-bottom: -12px;margin-left: 30px;">{columnConfig.name}{columnConfig.per}</div>
+        <div style="margin-bottom: 0px;">
+        <img src="{columnConfig.img}" width="100">
+        </div>
+        `;
+        labelBullet.label.paddingLeft = 160;
+        labelBullet.label.paddingBottom = 50;
+
+        labelBullet.locationX = 1;
+
+        categoryAxis.sortBySeries = series;
+        chart.data = [
             {
-                type: 'bar',
-                encode: {
-                    // Map the "amount" column to X axis
-                    x: 'amount',
-                    // Map the "product" column to Y axis
-                    y: 'product',
-                },
+                network: 'Facebook',
+                MAU: 30,
+
             },
-        ],
-    };
+            {
+                network: 'Google+',
+                MAU: 60,
+            },
+            {
+                network: 'Instagram',
+                MAU: 80,
+            },
+            {
+                network: 'Pinterest',
+                MAU: 100,
+                columnConfig: {
+                    name: "UK",
+                    per: "90%",
+                    img: "./assets/images/line.png"
+                },
+
+            },
+        ];
+
+        // am4core.useTheme(am4themes_animated);
+        // var chart = am4core.create('barGraph', am4charts.XYChart);
+
+        // // Add data
+        // chart.data = [
+        //     {
+        //         category: '100',
+        //         value: 100,
+        //     },
+        //     {
+        //         category: '80',
+        //         value: 80,
+        //     },
+        //     {
+        //         category: '60',
+        //         value: 60,
+        //     },
+        //     {
+        //         category: '30',
+        //         value: 30,
+        //     },
+        // ];
+
+        // var categoryAxis = chart.yAxes.push(new am4charts.CategoryAxis());
+        // categoryAxis.dataFields.category = 'category';
+        // categoryAxis.renderer.grid.template.location = 0;
+
+        // var valueAxis = chart.xAxes.push(new am4charts.ValueAxis());
+
+        // var series = chart.series.push(new am4charts.ColumnSeries());
+        // series.dataFields.valueX = 'value';
+        // series.dataFields.categoryY = 'category';
+
+        // var valueLabel = series.bullets.push(new am4charts.LabelBullet());
+        // valueLabel.label.text = '{value}';
+        // valueLabel.label.fontSize = 20;
+        // valueLabel.label.horizontalCenter = 'right';
+    }
 
     radarChart(sort: any) {
         let keys = Object.keys(sort);
@@ -1707,7 +1849,7 @@ export class ComparativeOverviewComponent implements OnInit {
         am4core.useTheme(am4themes_animated);
 
         var chart = am4core.create(
-            'chartdiv',
+            'bubble',
             am4plugins_forceDirected.ForceDirectedTree
         );
 
