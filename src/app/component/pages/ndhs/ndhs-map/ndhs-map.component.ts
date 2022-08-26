@@ -16,7 +16,7 @@ import { UtilitiesService } from 'src/app/services/utilities.service';
 export class NdhsMapComponent implements OnInit, AfterViewInit {
     countriesToShow: any;
     countriesData: any;
-    selectedYear: any = ['2021'];
+    selectedYear: any = [];
     pointSeries: any;
     root: any;
     chart: any;
@@ -29,6 +29,7 @@ export class NdhsMapComponent implements OnInit, AfterViewInit {
     ) {}
 
     ngOnInit(): void {
+        this.selectedYear.push('2021');
         //getting countries data
         this.mapService.getCountries().subscribe((data) => {
             let country = data;
@@ -198,9 +199,13 @@ export class NdhsMapComponent implements OnInit, AfterViewInit {
     }
 
     onSelectYear(year: string) {
+        localStorage.removeItem('selected_years');
         if (!this.selectedYear.includes(year)) {
             this.selectedYear.push(year);
-            localStorage.setItem('selected_years', JSON.stringify(this.selectedYear));
+            localStorage.setItem(
+                'selected_years',
+                JSON.stringify(this.selectedYear)
+            );
             this.setCountry();
             return true;
         } else {
@@ -208,6 +213,11 @@ export class NdhsMapComponent implements OnInit, AfterViewInit {
                 this.selectedYear = this.selectedYear.filter(
                     (item: string) => item !== year
                 );
+                localStorage.setItem(
+                    'selected_years',
+                    JSON.stringify(this.selectedYear)
+                );
+
                 this.setCountry();
                 return true;
             } else {

@@ -38,7 +38,8 @@ export class ComparativeResultDetailComponent implements OnInit {
     developmentId!: number;
     ultimateId!: number;
     isValue!: number;
- 
+    developmentType: any = 'Present Development';
+    ultimateName: string = 'Availability';
 
     @ViewChild('mySelect') mySelect: ElementRef | any;
 
@@ -61,7 +62,9 @@ export class ComparativeResultDetailComponent implements OnInit {
                 $(this).addClass('activelink');
                 var tagid = $(this).data('tag');
                 $('.list').removeClass('active').addClass('hide');
-                $('#' + tagid).addClass('active').removeClass('hide');
+                $('#' + tagid)
+                    .addClass('active')
+                    .removeClass('hide');
             });
         });
         this.apiService
@@ -79,8 +82,8 @@ export class ComparativeResultDetailComponent implements OnInit {
                     if (this.countriesData) {
                         this.setCountry();
                     }
-                    this.getData();
                 });
+            this.getData();
         });
         //getting countries data
         this.mapService.getCountries().subscribe((data) => {
@@ -118,7 +121,7 @@ export class ComparativeResultDetailComponent implements OnInit {
         this.governanceId = JSON.parse(
             localStorage.getItem('governance_id') || ''
         );
-        
+
         let data = {
             countries: this.countrySelected,
             governances: this.governanceId,
@@ -127,16 +130,14 @@ export class ComparativeResultDetailComponent implements OnInit {
 
         this.subscription.add(
             this.apiService.getComparativeOverview(data).subscribe((data) => {
-                this.ndhsDetails = data;
-                this.log(data);
+                this.ndhsDetails = [];
+                // this.log(data[this.object(data)[0]]);
                 let key: any = Object.keys(data);
-               key.forEach((element:any) => {
-                   for (const key in data[element]) {
-                    this.log(key)
-                    //    this.ndhsDetails.push({ [key]: this.viewData[key] });
-                   }
-               });
-                
+                key.forEach((element: any) => {
+                    for (const key in data[element]) {
+                        this.ndhsDetails.push({ [key]: data[element][key] });
+                    }
+                });
             })
         );
     }
@@ -154,7 +155,7 @@ export class ComparativeResultDetailComponent implements OnInit {
                     }
                 });
             });
-        });
+        });        
         this.oldSelections = this.mySelections;
     }
 
@@ -184,6 +185,38 @@ export class ComparativeResultDetailComponent implements OnInit {
             // to a column of dataset.source by default.
             series: [{ type: 'bar' }],
         };
+    }
+
+    getInformationReport() {
+        this.governanceId = JSON.parse(
+            localStorage.getItem('governance_id') || ''
+        );
+
+        let data = {
+            countries: this.countrySelected,
+            developmentId: this.developmentId,
+            governanceID: this.governanceId,
+            ultimateId: this.ultimateId,
+            year: '2021,2022',
+        };
+        this.log(data);
+
+        this.subscription.add(
+            this.apiService
+                .getComparativeInformation(data)
+                .subscribe((result) => {
+                    //     this.ndhsDetails = [];
+                    //     // this.log(data[this.object(data)[0]]);
+                    //     let key: any = Object.keys(data);
+                    //    key.forEach((element:any) => {
+                    //        for (const key in data[element]) {
+                    //         this.log(data[element][key])
+                    //            this.ndhsDetails.push({ [key]: data[element][key] });
+                    //    }
+                    //    });
+                    console.log(result);
+                })
+        );
     }
 
     handlePrint() {
@@ -232,33 +265,37 @@ export class ComparativeResultDetailComponent implements OnInit {
             this.toppings.setValue(this.mySelections);
         }
     }
-    
+
     toggle(num: number) {
         this.isValue = num;
     }
 
-    toggleProspective(event:any){
+    toggleProspective(value: any) {
+        this.developmentType = value;
         setTimeout(() => {
             $('#prospective_development li:first').addClass('active');
             $('#prospective_development ul li:first').addClass('activelink');
-            this.ultimateSelection(2,4);
+            this.ultimateSelection(2, 4, 'Capacity Building');
         }, 100);
-       
     }
 
-    togglePresent(event:any){
+    togglePresent(value: any) {
+        this.developmentType = value;
         setTimeout(() => {
             $('#present_development li:first').addClass('active');
             $('#present_development ul li:first').addClass('activelink');
-            this.ultimateSelection(1,2);
+            this.ultimateSelection(1, 2, 'Availability');
         }, 100);
-       
     }
 
-
-    ultimateSelection(development_id:number,ultimate_id:number){
+    ultimateSelection(
+        development_id: number,
+        ultimate_id: number,
+        name: string
+    ) {
         this.developmentId = development_id;
         this.ultimateId = ultimate_id;
-        // this.comparativeInformationChart();
+        this.ultimateName = name;
+        this.getInformationReport();
     }
 }
