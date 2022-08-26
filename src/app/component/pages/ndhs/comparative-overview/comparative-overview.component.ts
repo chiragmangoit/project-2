@@ -51,6 +51,7 @@ export class ComparativeOverviewComponent implements OnInit {
     eighty: any = [];
     hundred: any = [];
     toggle: any = true;
+
     object = Object.keys
     barchartData: any;
     sortedTableData: any;
@@ -1439,6 +1440,7 @@ export class ComparativeOverviewComponent implements OnInit {
     };
 
     ngOnInit(): void {
+
         this.tableScoreArray = [1,2,3,4,5];
 
         (this.selectedCountries = localStorage.getItem('selected_country')),
@@ -1523,6 +1525,7 @@ export class ComparativeOverviewComponent implements OnInit {
                 // });
             });
 
+            // console.log(data);
             this.common.getOverviewRadarChart(data).subscribe((val) => {
                 // console.log(val);
                 // console.log(val);
@@ -1584,6 +1587,7 @@ export class ComparativeOverviewComponent implements OnInit {
                 this.bubbleChart();
             });
         });
+
         // this.BarChart();
 
         this.barChart();
