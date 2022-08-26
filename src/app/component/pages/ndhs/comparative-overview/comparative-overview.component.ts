@@ -46,12 +46,15 @@ export class ComparativeOverviewComponent implements OnInit {
     newScore: any = [];
     sort: any;
     chartOptionNode: any;
-    thirty:any = [];
-    sixty:any = [];
-    eighty:any = [];
-    hundred:any = [];
-    toggle:any = true;
-
+    thirty: any = [];
+    sixty: any = [];
+    eighty: any = [];
+    hundred: any = [];
+    toggle: any = true;
+    object = Object.keys
+    barchartData: any;
+    sortedTableData: any;
+    tableScoreArray: any;
 
     @ViewChild('main') main: ElementRef | any;
     constructor(
@@ -1435,6 +1438,161 @@ export class ComparativeOverviewComponent implements OnInit {
         ],
     };
 
+    ngOnInit(): void {
+        this.tableScoreArray = [1,2,3,4,5];
+
+        (this.selectedCountries = localStorage.getItem('selected_country')),
+            console.log(this.selectedCountries);
+        this.currentYear = JSON.parse(
+            localStorage.getItem('selected_years') || ''
+        );
+
+        this.utilityService.emitNodeData.subscribe((value: any) => {
+            let data = {
+                countries: this.selectedCountries,
+                developmentId: '1,2',
+                governanceId: value.g_id,
+                taxonomyId: value.t_id,
+                year: this.currentYear,
+            };
+            let bubbleData = {
+                developmentId: '1,2',
+                governanceId: value.g_id,
+                taxonomyId: value.t_id,
+                ultimateId: value.u_id,
+                year: this.currentYear,
+            };
+
+            let barData = {
+                countries: this.selectedCountries,
+                developmentId: value.d_id,
+                governanceId: value.g_id,
+                ultimateId: value.u_id,
+                taxonomyId: value.t_id,
+            };
+
+            let tableChart = {
+                countries: this.selectedCountries,
+                developmentId: parseInt(value.d_id),
+                governanceId: value.g_id,
+                taxonomyId: value.t_id,
+                ultimateId: value.u_id,
+                year: value.year,
+            };
+
+            this.common.getTaxonomyTabledetails(tableChart).subscribe((val) => {
+                // console.log(val);
+
+                val.forEach((tableSort: any)=> {
+                    // console.log(tableSort);
+
+                    this.sortedTableData = val.reduce(
+                        (
+                            group: { [x: string]: any[] },
+                            product: { indicator_id: any }
+                        ) => {
+                            const { indicator_id } = product;
+                            group[indicator_id] = group[indicator_id] ?? [];
+                            group[indicator_id].push(product);
+                            return group;
+                        },
+                        {}
+                        );
+                    })
+                    // console.log(this.sortedTableData);
+
+                // console.log(val);
+                // val.forEach((element: any) => {
+                //     console.log(element);
+                // });
+            });
+
+            this.common.getOverviewBarChart(barData).subscribe((val) => {
+                this.barchartData = [];
+                val.forEach((element: any) => {
+                   this.barchartData.push({
+                    isoCode: element.iso_code,
+                    percentage:element.percentage
+                   })
+
+                })
+                console.log(this.barchartData);
+
+                // val.forEach((element: any) => {
+                //     console.log(element);
+                // });
+            });
+
+            this.common.getOverviewRadarChart(data).subscribe((val) => {
+                // console.log(val);
+                // console.log(val);
+                this.sort = val.reduce(
+                    (
+                        group: { [x: string]: any[] },
+                        product: { country_name: any }
+                    ) => {
+                        const { country_name } = product;
+                        group[country_name] = group[country_name] ?? [];
+                        group[country_name].push(product);
+                        return group;
+                    },
+                    {}
+                );
+                let keys = Object.keys(this.sort);
+                this.newScore = [];
+                this.radarChart(this.sort);
+            });
+
+            this.common.getOverviewBubbleChart(bubbleData).subscribe((bub) => {
+                this.thirty = [];
+                this.sixty = [];
+                this.eighty = [];
+                this.hundred = [];
+                // console.log(bub);
+                bub.forEach((bubData: any) => {
+                    if (bubData.percentage <= 30) {
+                        this.thirty.push({
+                            name: bubData.iso_code,
+                            value: 1,
+                        });
+                    } else if (
+                        bubData.percentage <= 60 &&
+                        bubData.percentage > 30
+                    ) {
+                        this.sixty.push({
+                            name: bubData.iso_code,
+                            value: 1,
+                        });
+                    } else if (
+                        bubData.percentage <= 80 &&
+                        bubData.percentage > 60
+                    ) {
+                        this.eighty.push({
+                            name: bubData.iso_code,
+                            value: 1,
+                        });
+                    } else if (
+                        bubData.percentage <= 100 &&
+                        bubData.percentage > 80
+                    ) {
+                        this.hundred.push({
+                            name: bubData.iso_code,
+                            value: 1,
+                        });
+                    }
+                });
+                this.bubbleChart();
+            });
+        });
+        // this.BarChart();
+
+        this.barChart();
+    }
+
+    ngAfterViewInit() {
+        this.nodeChart();
+        this.cd.detectChanges();
+    }
 
     toggleCharts() {
         this.toggle = !this.toggle;
@@ -1490,98 +1648,119 @@ export class ComparativeOverviewComponent implements OnInit {
                 this.utilityService.emitNodeData.next(e.data);
             }
             this.radarChart(this.sort);
-            // console.log(e.data.t_id)
-            // this.governanceId = e.data.g_id;
-            // this.governanceId = e.data.g_id;
-            // this.scoreGenerator(rtId);
-            // this.graph.nodes.forEach((nodeData)=> {
-            //     console.log(nodeData.u_id);
-            // })
         });
     }
 
-    bar: EChartsOption = {
-        dataset: {
-            source: [
-                ['score', 'amount', 'product'],
-                [80, 80, 'Matcha Latte'],
-                [20, 20, 'Milk Tea'],
-                [50, 50, 'Cheese Cocoa'],
-                [30, 30, 'Cheese Brownie'],
-            ],
-        },
-        grid: { containLabel: true },
-        xAxis: { name: 'amount' },
-        yAxis: { type: 'category' },
-        visualMap: {
-            // orient: 'horizontal',
-            top: 'center',
-            min: 10,
-            max: 100,
-            // text: ['High Score', 'Low Score'],
-            // Map the score column to color
-            dimension: 0,
-            inRange: {
-                color: ['#65B581', '#FFCE34', '#FD665F'],
-            },
-        },
-        emphasis: {
-            disabled: true,
-        },
-        series: [
-            {
-                type: 'bar',
-                encode: {
-                    // Map the "amount" column to X axis
-                    x: 'amount',
-                    // Map the "product" column to Y axis
-                    y: 'product',
-                },
-            },
-        ],
-    };
+    barChart() {
+        am4core.useTheme(am4themes_animated);
+        // Themes end
 
-    // radarChart() {
-    //     this.chartOptionRadar = {
-    //         title: {},
-    //         legend: {
-    //             data: ['Allocated Budget', 'Actual Spending'],
-    //         },
-    //         radar: {
-    //             shape: 'circle',
-    //             splitArea: {
-    //                 areaStyle: {
-    //                     color: ['#FFFAE3', '#F0EFEF'],
-    //                     shadowColor: 'rgba(0, 0, 0, 0)',
-    //                     shadowBlur: 10,
-    //                 },
-    //             },
-    //             indicator: [
-    //                 { text: 'Availability', max: 100 },
-    //                 { text: 'Capacity Building', max: 100 },
-    //                 { text: 'Development Strategy', max: 100 },
-    //                 { text: 'Readiness', max: 100 },
-    //             ],
-    //         },
-    //         series: [
-    //             {
-    //                 name: 'Budget vs spending',
-    //                 type: 'radar',
-    //                 data: [
-    //                     {
-    //                         value: [this.aScore, this.cScore, this.dScore, this.aScore],
-    //                         name: 'Allocated Budget',
-    //                     },
-    //                     {
-    //                         value: [2, 2, 2, 2],
-    //                         name: 'Actual Spending',
-    //                         areaStyle: {},
-    //                     },
-    //                 ],
-    //             },
-    //         ],
-    //     };
-    // }
+        let chart = am4core.create('barGraph', am4charts.XYChart);
+        chart.padding(0, 0, 0, 0);
+
+        let categoryAxis = chart.yAxes.push(new am4charts.CategoryAxis());
+        categoryAxis.renderer.grid.template.location = 0;
+        categoryAxis.dataFields.category = 'network';
+        categoryAxis.renderer.minGridDistance = 1;
+        categoryAxis.renderer.inversed = false;
+        categoryAxis.renderer.grid.template.disabled = true;
+
+        let valueAxis = chart.xAxes.push(new am4charts.ValueAxis());
+        valueAxis.min = 0;
+
+        let series = chart.series.push(new am4charts.ColumnSeries());
+        series.dataFields.categoryY = 'network';
+        series.dataFields.valueX = 'MAU';
+        series.tooltipText = '{valueX.value}';
+        series.columns.template.strokeOpacity = 0;
+        series.columns.template.column.cornerRadiusBottomRight = 5;
+        series.columns.template.column.cornerRadiusTopRight = 5;
+
+
+        let labelBullet = series.bullets.push(new am4charts.LabelBullet());
+        labelBullet.label.horizontalCenter = 'left';
+        labelBullet.label.dx = 10;
+
+        setTimeout(() => {
+
+            console.log(labelBullet.clones.values);
+        }, 1000);
+        labelBullet.label.html = `
+        <div style="margin-bottom: -12px;margin-left: 30px;">{columnConfig.name}{columnConfig.per}</div>
+        <div style="margin-bottom: 0px;">
+        <img src="{columnConfig.img}" width="100">
+        </div>
+        `;
+        labelBullet.label.paddingLeft = 160;
+        labelBullet.label.paddingBottom = 50;
+
+        labelBullet.locationX = 1;
+
+        categoryAxis.sortBySeries = series;
+        chart.data = [
+            {
+                network: 'Facebook',
+                MAU: 30,
+
+            },
+            {
+                network: 'Google+',
+                MAU: 60,
+            },
+            {
+                network: 'Instagram',
+                MAU: 80,
+            },
+            {
+                network: 'Pinterest',
+                MAU: 100,
+                columnConfig: {
+                    name: "UK",
+                    per: "90%",
+                    img: "./assets/images/line.png"
+                },
+
+            },
+        ];
+
+        // am4core.useTheme(am4themes_animated);
+        // var chart = am4core.create('barGraph', am4charts.XYChart);
+
+        // // Add data
+        // chart.data = [
+        //     {
+        //         category: '100',
+        //         value: 100,
+        //     },
+        //     {
+        //         category: '80',
+        //         value: 80,
+        //     },
+        //     {
+        //         category: '60',
+        //         value: 60,
+        //     },
+        //     {
+        //         category: '30',
+        //         value: 30,
+        //     },
+        // ];
+
+        // var categoryAxis = chart.yAxes.push(new am4charts.CategoryAxis());
+        // categoryAxis.dataFields.category = 'category';
+        // categoryAxis.renderer.grid.template.location = 0;
+
+        // var valueAxis = chart.xAxes.push(new am4charts.ValueAxis());
+
+        // var series = chart.series.push(new am4charts.ColumnSeries());
+        // series.dataFields.valueX = 'value';
+        // series.dataFields.categoryY = 'category';
+
+        // var valueLabel = series.bullets.push(new am4charts.LabelBullet());
+        // valueLabel.label.text = '{value}';
+        // valueLabel.label.fontSize = 20;
+        // valueLabel.label.horizontalCenter = 'right';
+    }
 
     radarChart(sort: any) {
         let keys = Object.keys(sort);
@@ -1663,11 +1842,10 @@ export class ComparativeOverviewComponent implements OnInit {
     }
 
     bubbleChart() {
-
         am4core.useTheme(am4themes_animated);
 
         var chart = am4core.create(
-            'chartdiv',
+            'bubble',
             am4plugins_forceDirected.ForceDirectedTree
         );
 
@@ -1724,7 +1902,7 @@ export class ComparativeOverviewComponent implements OnInit {
                 value: 3,
                 x: am4core.percent(550),
                 y: am4core.percent(25),
-            }
+            },
         ];
 
         series.dataFields.linkWith = 'linkWith';
@@ -1757,92 +1935,5 @@ export class ComparativeOverviewComponent implements OnInit {
 
         series.nodes.template.outerCircle.strokeOpacity = 0;
         series.nodes.template.outerCircle.fillOpacity = 0;
-    }
-
-    ngOnInit(): void {
-        this.selectedCountries = localStorage.getItem('selected_country'),
-        console.log(this.selectedCountries);
-        this.currentYear = JSON.parse(localStorage.getItem('selected_years') || '');
-
-        this.utilityService.emitNodeData.subscribe((value: any) => {
-
-            let data = {
-                countries: this.selectedCountries,
-                developmentId: "1,2",
-                governanceId: value.g_id,
-                taxonomyId: value.t_id,
-                year: this.currentYear,
-            };
-            let bubbleData = {
-                developmentId: "1,2",
-                governanceId: value.g_id,
-                taxonomyId: value.t_id,
-                ultimateId: value.u_id,
-                year: this.currentYear,
-            };
-
-            // console.log(data);
-            this.common.getOverviewRadarChart(data).subscribe((val) => {
-                // console.log(val);
-                // console.log(val);
-                this.sort = val.reduce(
-                    (
-                        group: { [x: string]: any[] },
-                        product: { country_name: any }
-                    ) => {
-                        const { country_name } = product;
-                        group[country_name] = group[country_name] ?? [];
-                        group[country_name].push(product);
-                        return group;
-                    },
-                    {}
-                );
-                let keys = Object.keys(this.sort);
-                this.newScore =[];
-                this.radarChart(this.sort);
-            });
-
-
-            this.common.getOverviewBubbleChart(bubbleData).subscribe((bub) => {
-                this.thirty = [];
-                this.sixty = [];
-                this.eighty = [];
-                this.hundred = [];
-                // console.log(bub);
-                bub.forEach((bubData: any)=> {
-                    if (bubData.percentage <= 30) {
-                        this.thirty.push({
-                            name: bubData.iso_code,
-                            value:1
-                        });                    }
-                    else if (bubData.percentage <= 60 && bubData.percentage > 30) {
-                        this.sixty.push({
-                            name: bubData.iso_code,
-                            value:1
-                        });                      }
-                    else if (bubData.percentage <= 80 && bubData.percentage > 60) {
-                        this.eighty.push({
-                            name: bubData.iso_code,
-                            value:1
-                        });
-                    }
-                    else if (bubData.percentage <= 100 && bubData.percentage > 80) {
-                        this.hundred.push({
-                            name: bubData.iso_code,
-                            value:1
-                        });
-                    }
-                })
-                this.bubbleChart();
-            });
-
-
-        });
-
-    }
-
-    ngAfterViewInit() {
-        this.nodeChart();
-        this.cd.detectChanges();
     }
 }
