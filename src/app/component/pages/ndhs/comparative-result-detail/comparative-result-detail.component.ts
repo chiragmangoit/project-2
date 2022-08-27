@@ -40,6 +40,8 @@ export class ComparativeResultDetailComponent implements OnInit {
     isValue!: number;
     developmentType: any = 'Present Development';
     ultimateName: string = 'Availability';
+    comparativeInformation: any ;
+    selectedCountryName: any = [];
 
     @ViewChild('mySelect') mySelect: ElementRef | any;
 
@@ -84,6 +86,7 @@ export class ComparativeResultDetailComponent implements OnInit {
                     }
                 });
             this.getData();
+            this.togglePresent('Availability');
         });
         //getting countries data
         this.mapService.getCountries().subscribe((data) => {
@@ -110,6 +113,7 @@ export class ComparativeResultDetailComponent implements OnInit {
                 this.governanceId = gId;
                 this.ndhsDetails = [];
                 this.getData();
+                this.togglePresent('Availability');
             })
         );
 
@@ -148,6 +152,7 @@ export class ComparativeResultDetailComponent implements OnInit {
             countryByYear.forEach((data: any) => {
                 this.selectedCountry.forEach((country: any) => {
                     if (country.country_id === data.id) {
+                        this.selectedCountryName.push(country.country_name);
                         if (this.mySelections.length <= 1) {
                             this.mySelections.push(country.country_id);
                             this.toppings.setValue(this.mySelections);
@@ -188,35 +193,61 @@ export class ComparativeResultDetailComponent implements OnInit {
     }
 
     getInformationReport() {
+        this.currentYear = JSON.parse(localStorage.getItem('year') || '');
         this.governanceId = JSON.parse(
             localStorage.getItem('governance_id') || ''
         );
 
-        let data = {
+        let informationData = {
             countries: this.countrySelected,
             developmentId: this.developmentId,
-            governanceID: this.governanceId,
+            governanceId: this.governanceId.toString(),
             ultimateId: this.ultimateId,
-            year: '2021,2022',
+            year: this.currentYear,
         };
-        this.log(data);
+      
 
         this.subscription.add(
             this.apiService
-                .getComparativeInformation(data)
+                .getComparativeInformation(informationData)
                 .subscribe((result) => {
-                    //     this.ndhsDetails = [];
-                    //     // this.log(data[this.object(data)[0]]);
-                    //     let key: any = Object.keys(data);
-                    //    key.forEach((element:any) => {
-                    //        for (const key in data[element]) {
-                    //         this.log(data[element][key])
-                    //            this.ndhsDetails.push({ [key]: data[element][key] });
-                    //    }
-                    //    });
+                    this.comparativeInformation = result;
                     console.log(result);
+                    
+                    // this.formatInformationReport(result);
                 })
         );
+    }
+
+    formatInformationReport(result:any) {
+        function myFunc(obj: any[], prop: string) {
+            return obj.reduce(function (acc, item) {
+                let key = item[prop];
+                if (typeof key === 'string') {
+                    key = key.replace(/\s+/g, '');
+                }
+                if (!acc[key]) {
+                    acc[key] = [];
+                }
+                if (prop == 'q_indicator_id') {
+                    if (
+                        acc[key].findIndex(
+                            (x: { q_indicator_id: any }) =>
+                                x.q_indicator_id === item.q_indicator_id
+                        ) === -1
+                    ) {
+                        acc[key].push(item);
+                    }
+                } else {
+                    acc[key].push(item);
+                }
+                return acc;
+            }, []);
+        }
+
+        this.comparativeInformation = myFunc( result,"taxonomy");
+        console.log(this.comparativeInformation);
+        
     }
 
     handlePrint() {
@@ -275,8 +306,8 @@ export class ComparativeResultDetailComponent implements OnInit {
         setTimeout(() => {
             $('#prospective_development li:first').addClass('active');
             $('#prospective_development ul li:first').addClass('activelink');
-            this.ultimateSelection(2, 4, 'Capacity Building');
         }, 100);
+        this.ultimateSelection(2, 4, 'Capacity Building');
     }
 
     togglePresent(value: any) {
@@ -284,8 +315,8 @@ export class ComparativeResultDetailComponent implements OnInit {
         setTimeout(() => {
             $('#present_development li:first').addClass('active');
             $('#present_development ul li:first').addClass('activelink');
-            this.ultimateSelection(1, 2, 'Availability');
         }, 100);
+        this.ultimateSelection(1, 2, 'Availability');
     }
 
     ultimateSelection(
