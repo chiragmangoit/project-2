@@ -40,8 +40,13 @@ export class ComparativeResultDetailComponent implements OnInit {
     isValue!: number;
     developmentType: any = 'Present Development';
     ultimateName: string = 'Availability';
-    comparativeInformation: any ;
+    comparativeInformation: any;
     selectedCountryName: any = [];
+    barChartData: any = [];
+    taxnomyId: number | undefined;
+    governancetext: string | undefined;
+    actualScore: number = 0;
+    indicatorScore: number = 0;
 
     @ViewChild('mySelect') mySelect: ElementRef | any;
 
@@ -111,13 +116,19 @@ export class ComparativeResultDetailComponent implements OnInit {
         this.subscription.add(
             this.utilityService.emitGovernance.subscribe((gId) => {
                 this.governanceId = gId;
+                if (gId === 1) {
+                    this.governancetext = 'Health Governance';
+                    this.taxnomyId = 1;
+                } else {
+                    this.governancetext = 'Digital Health Governance';
+                    this.taxnomyId = 6;
+                }
+
                 this.ndhsDetails = [];
                 this.getData();
                 this.togglePresent('Availability');
             })
         );
-
-        this.showBarChart();
     }
 
     getData() {
@@ -142,6 +153,7 @@ export class ComparativeResultDetailComponent implements OnInit {
                         this.ndhsDetails.push({ [key]: data[element][key] });
                     }
                 });
+                this.calculateScore();
             })
         );
     }
@@ -160,26 +172,50 @@ export class ComparativeResultDetailComponent implements OnInit {
                     }
                 });
             });
-        });        
+        });
         this.oldSelections = this.mySelections;
     }
 
-    showBarChart() {
+    getBarChartData() {
+        this.currentYear = JSON.parse(localStorage.getItem('year') || '');
+        this.governanceId = JSON.parse(
+            localStorage.getItem('governance_id') || ''
+        );
+
+        let barChartData = {
+            developmentId: this.developmentId,
+            governances: this.governanceId.toString(),
+            taxonomyId: this.taxnomyId,
+            ultimateId: this.ultimateId,
+            year: this.currentYear,
+        };
+
+        this.subscription.add(
+            this.apiService
+                .getTopCountriesData(barChartData)
+                .subscribe((result) => {
+                    this.barChartData = [];
+                    this.barChartData.push(['Availabilty']);
+                    result.forEach((element: any) => {
+                        this.barChartData.push([
+                            element.country_name,
+                            element.score,
+                        ]);
+                    });
+                    this.showBarChart(this.barChartData);
+                })
+        );
+    }
+
+    showBarChart(data: any) {
         this.chartOptionBar = {
             title: {
-                text: 'Health Governance',
+                text: this.governancetext,
             },
             legend: {},
             tooltip: {},
             dataset: {
-                source: [
-                    ['Readiness'],
-                    ['Japan', 60],
-                    ['Australia', 80],
-                    ['India', 50],
-                    ['China', 60],
-                    ['Spain', 60],
-                ],
+                source: data,
             },
             xAxis: {
                 type: 'category',
@@ -205,49 +241,14 @@ export class ComparativeResultDetailComponent implements OnInit {
             ultimateId: this.ultimateId,
             year: this.currentYear,
         };
-      
 
         this.subscription.add(
             this.apiService
                 .getComparativeInformation(informationData)
                 .subscribe((result) => {
                     this.comparativeInformation = result;
-                    console.log(result);
-                    
-                    // this.formatInformationReport(result);
                 })
         );
-    }
-
-    formatInformationReport(result:any) {
-        function myFunc(obj: any[], prop: string) {
-            return obj.reduce(function (acc, item) {
-                let key = item[prop];
-                if (typeof key === 'string') {
-                    key = key.replace(/\s+/g, '');
-                }
-                if (!acc[key]) {
-                    acc[key] = [];
-                }
-                if (prop == 'q_indicator_id') {
-                    if (
-                        acc[key].findIndex(
-                            (x: { q_indicator_id: any }) =>
-                                x.q_indicator_id === item.q_indicator_id
-                        ) === -1
-                    ) {
-                        acc[key].push(item);
-                    }
-                } else {
-                    acc[key].push(item);
-                }
-                return acc;
-            }, []);
-        }
-
-        this.comparativeInformation = myFunc( result,"taxonomy");
-        console.log(this.comparativeInformation);
-        
     }
 
     handlePrint() {
@@ -328,5 +329,53 @@ export class ComparativeResultDetailComponent implements OnInit {
         this.ultimateId = ultimate_id;
         this.ultimateName = name;
         this.getInformationReport();
+        this.getBarChartData();
+    }
+
+    calculateScore() {
+        this.ndhsDetails.forEach((element: any) => {
+            this.object(element[this.object(element)[0]]).forEach(
+                (innerElement: any) => {
+                    let actualScore1 = 0;
+                        let actualScore2 = 0;
+                        let indiacatorScore1 = 0;
+                        let indiacatorScore2 = 0;
+                    // this.log(innerElement);
+                    this.object(
+                        element[this.object(element)[0]][innerElement]
+                    ).forEach((items: any) => {
+                        // console.log(items);
+                        this.object(
+                            element[this.object(element)[0]][innerElement][
+                                items
+                            ]
+                        ).forEach((inneritem: any) => {
+                            actualScore1 +=  element[this.object(element)[0]][innerElement][
+                                items
+                            ][inneritem][0].actual_score;
+
+                            actualScore2 +=  element[this.object(element)[0]][innerElement][
+                                items
+                            ][inneritem][1].actual_score;
+
+                            indiacatorScore1 +=  element[this.object(element)[0]][innerElement][
+                                items
+                            ][inneritem][1].indicator_score;
+
+                            indiacatorScore2 +=  element[this.object(element)[0]][innerElement][
+                                items
+                            ][inneritem][1].indicator_score;
+                        });
+                        console.log({ [items] : {
+                            actualScore : Math.round(Math.round((actualScore1/indiacatorScore1)* 100)/20),
+                            indiacatorScore: Math.round(Math.round((actualScore2/indiacatorScore2)* 100)/20),
+                
+                        } });
+                        
+                    });
+                }
+            );
+        });
+        console.log(this.ndhsDetails);
     }
 }

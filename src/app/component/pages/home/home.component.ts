@@ -23,15 +23,19 @@ export class HomeComponent implements OnInit {
         );
         localStorage.setItem(
             'country_flag',
-            "us.png"
+            JSON.stringify("us.png")
+            
         );
         localStorage.setItem(
             'country_name',
-            'Australia'
+            JSON.stringify('Australia')
+            
         );
         localStorage.setItem(
             'country_iso_code',
-            "US"
+            JSON.stringify("US")
+
+            
         );
         localStorage.setItem('year', '2021');
         localStorage.setItem('selected_years', JSON.stringify(this.selectedYear) );
