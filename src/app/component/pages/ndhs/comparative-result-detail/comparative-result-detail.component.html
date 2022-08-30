@@ -236,11 +236,11 @@
                                                                 ultimateSelection(
                                                                     2,
                                                                     4,
-                                                                    'Development Strategy'
+                                                                    'Capacity Building'
                                                                 )
                                                             "
-                                                            >Development
-                                                            Strategy</a
+                                                            >Capacity
+                                                            Building</a
                                                         >
                                                     </li>
                                                     <li data-tag="six">
@@ -250,11 +250,11 @@
                                                                 ultimateSelection(
                                                                     2,
                                                                     3,
-                                                                    'Capacity Building'
+                                                                    'Development Strategy'
                                                                 )
                                                             "
-                                                            >Capacity
-                                                            Building</a
+                                                            >Development
+                                                            Strategy</a
                                                         >
                                                     </li>
                                                 </ul>
@@ -280,7 +280,7 @@
                                                     ndhsDetails[1][
                                                         object(ndhsDetails[1])
                                                     ]
-                                                )
+                                                ); let i = index
                                             "
                                         >
                                             <ng-container>
@@ -309,7 +309,7 @@
                                                                                 ndhsDetails[1]
                                                                             )
                                                                         ][item]
-                                                                    )
+                                                                    ); let j = index
                                                                 "
                                                             >
                                                                 <div
@@ -353,7 +353,7 @@
                                                                                                     innerData
                                                                                                 ]
                                                                                             )[0]
-                                                                                        ]
+                                                                                        ]; let k = index
                                                                                     "
                                                                                     class="country-1"
                                                                                 >
@@ -368,13 +368,29 @@
                                                                                     <div
                                                                                         class="rating"
                                                                                     >
-                                                                                        <ng-container >
-                                                                                            <span
+                                                                                        <ng-container *ngFor="let value of scoreIndicatorArray" >
+                                                                                            <ng-container *ngIf=" k == 0" >
+                                                                                                <span *ngIf=" value <= scoreArray[1]['Availability'][i][item][j][innerData].country1; else grey"  
                                                                                                 class="green"
-                                                                                            ></span>
-                                                                                            <span
+                                                                                            >
+                                                                                            </span>
+                                                                                            <ng-template #grey>
+                                                                                                <span
                                                                                                 class="gray"
                                                                                             ></span>
+                                                                                            </ng-template>
+                                                                                            </ng-container>
+                                                                                            <ng-container *ngIf=" k == 1">
+                                                                                                <span *ngIf=" value <= scoreArray[1]['Availability'][i][item][j][innerData].country2; else grey"  
+                                                                                                class="green"
+                                                                                            >
+                                                                                            </span>
+                                                                                            <ng-template #grey>
+                                                                                                <span
+                                                                                                class="gray"
+                                                                                            ></span>
+                                                                                            </ng-template>
+                                                                                            </ng-container>
                                                                                         </ng-container>
                                                                                     </div>
                                                                                 </div>
@@ -561,7 +577,7 @@
                                                     ndhsDetails[1][
                                                         object(ndhsDetails[1])
                                                     ]
-                                                )
+                                                ); let i = index
                                             "
                                         >
                                             <ng-container>
@@ -590,7 +606,7 @@
                                                                                 ndhsDetails[1]
                                                                             )
                                                                         ][item]
-                                                                    )
+                                                                    ); let j = index
                                                                 "
                                                             >
                                                                 <div
@@ -634,7 +650,7 @@
                                                                                                     innerData
                                                                                                 ]
                                                                                             )[0]
-                                                                                        ]
+                                                                                        ]; let k = index
                                                                                     "
                                                                                     class="country-1"
                                                                                 >
@@ -649,13 +665,29 @@
                                                                                     <div
                                                                                         class="rating"
                                                                                     >
-                                                                                        <ng-container>
-                                                                                            <span
+                                                                                        <ng-container *ngFor="let value of scoreIndicatorArray" >
+                                                                                            <ng-container *ngIf=" k == 0" >
+                                                                                                <span *ngIf=" value <= scoreArray[1]['Availability'][i][item][j][innerData].country1; else grey"  
                                                                                                 class="green"
-                                                                                            ></span>
-                                                                                            <span
+                                                                                            >
+                                                                                            </span>
+                                                                                            <ng-template #grey>
+                                                                                                <span
                                                                                                 class="gray"
                                                                                             ></span>
+                                                                                            </ng-template>
+                                                                                            </ng-container>
+                                                                                            <ng-container *ngIf=" k == 1">
+                                                                                                <span *ngIf=" value <= scoreArray[1]['Availability'][i][item][j][innerData].country2; else grey"  
+                                                                                                class="green"
+                                                                                            >
+                                                                                            </span>
+                                                                                            <ng-template #grey>
+                                                                                                <span
+                                                                                                class="gray"
+                                                                                            ></span>
+                                                                                            </ng-template>
+                                                                                            </ng-container>
                                                                                         </ng-container>
                                                                                     </div>
                                                                                 </div>
@@ -842,7 +874,7 @@
                                                     ndhsDetails[0][
                                                         object(ndhsDetails[0])
                                                     ]
-                                                )
+                                                );let i = index
                                             "
                                         >
                                             <ng-container>
@@ -871,7 +903,7 @@
                                                                                 ndhsDetails[0]
                                                                             )
                                                                         ][item]
-                                                                    )
+                                                                    ); let j = index
                                                                 "
                                                             >
                                                                 <div
@@ -915,7 +947,7 @@
                                                                                                     innerData
                                                                                                 ]
                                                                                             )[0]
-                                                                                        ]
+                                                                                        ]; let k = index
                                                                                     "
                                                                                     class="country-1"
                                                                                 >
@@ -930,14 +962,30 @@
                                                                                     <div
                                                                                         class="rating"
                                                                                     >
-                                                                                        <ng-container>
+                                                                                    <ng-container *ngFor="let value of scoreIndicatorArray" >
+                                                                                        <ng-container *ngIf=" k == 0" >
+                                                                                            <span *ngIf=" value <= scoreArray[0]['Readiness'][i][item][j][innerData].country1; else grey"  
+                                                                                            class="green"
+                                                                                        >
+                                                                                        </span>
+                                                                                        <ng-template #grey>
                                                                                             <span
-                                                                                                class="green"
-                                                                                            ></span>
-                                                                                            <span
-                                                                                                class="gray"
-                                                                                            ></span>
+                                                                                            class="gray"
+                                                                                        ></span>
+                                                                                        </ng-template>
                                                                                         </ng-container>
+                                                                                        <ng-container *ngIf=" k == 1">
+                                                                                            <span *ngIf=" value <= scoreArray[0]['Readiness'][i][item][j][innerData].country2; else grey"  
+                                                                                            class="green"
+                                                                                        >
+                                                                                        </span>
+                                                                                        <ng-template #grey>
+                                                                                            <span
+                                                                                            class="gray"
+                                                                                        ></span>
+                                                                                        </ng-template>
+                                                                                        </ng-container>
+                                                                                    </ng-container>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -1123,7 +1171,7 @@
                                                     ndhsDetails[3][
                                                         object(ndhsDetails[3])
                                                     ]
-                                                )
+                                                );let i = index
                                             "
                                         >
                                             <ng-container>
@@ -1152,7 +1200,7 @@
                                                                                 ndhsDetails[3]
                                                                             )
                                                                         ][item]
-                                                                    )
+                                                                    );let j = index
                                                                 "
                                                             >
                                                                 <div
@@ -1196,7 +1244,7 @@
                                                                                                     innerData
                                                                                                 ]
                                                                                             )[0]
-                                                                                        ]
+                                                                                        ]; let k = index
                                                                                     "
                                                                                     class="country-1"
                                                                                 >
@@ -1211,14 +1259,30 @@
                                                                                     <div
                                                                                         class="rating"
                                                                                     >
-                                                                                        <ng-container>
+                                                                                    <ng-container *ngFor="let value of scoreIndicatorArray" >
+                                                                                        <ng-container *ngIf=" k == 0" >
+                                                                                            <span *ngIf=" value <= scoreArray[3]['Capacity Building'][i][item][j][innerData].country1; else grey"  
+                                                                                            class="green"
+                                                                                        >
+                                                                                        </span>
+                                                                                        <ng-template #grey>
                                                                                             <span
-                                                                                                class="green"
-                                                                                            ></span>
-                                                                                            <span
-                                                                                                class="gray"
-                                                                                            ></span>
+                                                                                            class="gray"
+                                                                                        ></span>
+                                                                                        </ng-template>
                                                                                         </ng-container>
+                                                                                        <ng-container *ngIf=" k == 1">
+                                                                                            <span *ngIf=" value <= scoreArray[3]['Capacity Building'][i][item][j][innerData].country2; else grey"  
+                                                                                            class="green"
+                                                                                        >
+                                                                                        </span>
+                                                                                        <ng-template #grey>
+                                                                                            <span
+                                                                                            class="gray"
+                                                                                        ></span>
+                                                                                        </ng-template>
+                                                                                        </ng-container>
+                                                                                    </ng-container>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -1399,120 +1463,65 @@
                                             <h3>Comparison</h3>
                                         </div>
                                         <mat-accordion
-                                            *ngFor="
-                                                let item of object(
-                                                    ndhsDetails[3][
-                                                        object(ndhsDetails[3])
-                                                    ]
-                                                )
-                                            "
-                                        >
-                                            <ng-container>
-                                                <mat-expansion-panel hideToggle>
-                                                    <mat-expansion-panel-header>
-                                                        <mat-panel-title>
-                                                            {{ item }}
-                                                        </mat-panel-title>
-                                                        <mat-panel-description>
-                                                            <mat-icon
-                                                                >arrow_drop_down</mat-icon
-                                                            >
-                                                        </mat-panel-description>
-                                                    </mat-expansion-panel-header>
-                                                    <div
-                                                        class="accordion-content"
-                                                    >
-                                                        <div
-                                                            class="content-row"
+                                        *ngFor="
+                                            let item of object(
+                                                ndhsDetails[3][
+                                                    object(ndhsDetails[3])
+                                                ]
+                                            );let i = index
+                                        "
+                                    >
+                                        <ng-container>
+                                            <mat-expansion-panel hideToggle>
+                                                <mat-expansion-panel-header>
+                                                    <mat-panel-title>
+                                                        {{ item }}
+                                                    </mat-panel-title>
+                                                    <mat-panel-description>
+                                                        <mat-icon
+                                                            >arrow_drop_down</mat-icon
                                                         >
-                                                            <mat-accordion
-                                                                *ngFor="
-                                                                    let innerData of object(
-                                                                        ndhsDetails[3][
-                                                                            object(
-                                                                                ndhsDetails[3]
-                                                                            )
-                                                                        ][item]
-                                                                    )
-                                                                "
+                                                    </mat-panel-description>
+                                                </mat-expansion-panel-header>
+                                                <div
+                                                    class="accordion-content"
+                                                >
+                                                    <div
+                                                        class="content-row"
+                                                    >
+                                                        <mat-accordion
+                                                            *ngFor="
+                                                                let innerData of object(
+                                                                    ndhsDetails[3][
+                                                                        object(
+                                                                            ndhsDetails[3]
+                                                                        )
+                                                                    ][item]
+                                                                );let j = index
+                                                            "
+                                                        >
+                                                            <div
+                                                                class="content-inner"
                                                             >
-                                                                <div
-                                                                    class="content-inner"
+                                                                <mat-expansion-panel
+                                                                    hideToggle
                                                                 >
-                                                                    <mat-expansion-panel
-                                                                        hideToggle
-                                                                    >
-                                                                        <mat-expansion-panel-header>
-                                                                            <div
-                                                                                class="left-content col-md-7"
-                                                                            >
-                                                                                <mat-panel-title>
-                                                                                    {{
-                                                                                        innerData
-                                                                                    }}
-                                                                                </mat-panel-title>
-                                                                            </div>
-                                                                            <div
-                                                                                class="right-content col-md-5"
-                                                                            >
-                                                                                <div
-                                                                                    *ngFor="
-                                                                                        let country of ndhsDetails[3][
-                                                                                            object(
-                                                                                                ndhsDetails[3]
-                                                                                            )
-                                                                                        ][
-                                                                                            item
-                                                                                        ][
-                                                                                            innerData
-                                                                                        ][
-                                                                                            object(
-                                                                                                ndhsDetails[3][
-                                                                                                    object(
-                                                                                                        ndhsDetails[3]
-                                                                                                    )
-                                                                                                ][
-                                                                                                    item
-                                                                                                ][
-                                                                                                    innerData
-                                                                                                ]
-                                                                                            )[0]
-                                                                                        ]
-                                                                                    "
-                                                                                    class="country-1"
-                                                                                >
-                                                                                    <Span>
-                                                                                        {{
-                                                                                            country.c_name
-                                                                                        }}
-                                                                                        <mat-icon
-                                                                                            >arrow_drop_up
-                                                                                        </mat-icon>
-                                                                                    </Span>
-                                                                                    <div
-                                                                                        class="rating"
-                                                                                    >
-                                                                                        <ng-container>
-                                                                                            <span
-                                                                                                class="green"
-                                                                                            ></span>
-                                                                                            <span
-                                                                                                class="gray"
-                                                                                            ></span>
-                                                                                        </ng-container>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                            <mat-panel-description>
-                                                                                <mat-icon
-                                                                                    >arrow_drop_down</mat-icon
-                                                                                >
-                                                                            </mat-panel-description>
-                                                                        </mat-expansion-panel-header>
+                                                                    <mat-expansion-panel-header>
                                                                         <div
-                                                                            *ngFor="
-                                                                                let question of object(
-                                                                                    ndhsDetails[3][
+                                                                            class="left-content col-md-7"
+                                                                        >
+                                                                            <mat-panel-title>
+                                                                                {{
+                                                                                    innerData
+                                                                                }}
+                                                                            </mat-panel-title>
+                                                                        </div>
+                                                                        <div
+                                                                            class="right-content col-md-5"
+                                                                        >
+                                                                            <div
+                                                                                *ngFor="
+                                                                                    let country of ndhsDetails[3][
                                                                                         object(
                                                                                             ndhsDetails[3]
                                                                                         )
@@ -1520,155 +1529,226 @@
                                                                                         item
                                                                                     ][
                                                                                         innerData
-                                                                                    ]
-                                                                                )
-                                                                            "
-                                                                            class="content-row"
-                                                                        >
-                                                                            <div
-                                                                                class="query-right-content col-md-12"
+                                                                                    ][
+                                                                                        object(
+                                                                                            ndhsDetails[3][
+                                                                                                object(
+                                                                                                    ndhsDetails[3]
+                                                                                                )
+                                                                                            ][
+                                                                                                item
+                                                                                            ][
+                                                                                                innerData
+                                                                                            ]
+                                                                                        )[0]
+                                                                                    ]; let k = index
+                                                                                "
+                                                                                class="country-1"
                                                                             >
-                                                                                <div
-                                                                                    class="query-name col-md-6"
-                                                                                >
+                                                                                <Span>
                                                                                     {{
-                                                                                        question
+                                                                                        country.c_name
                                                                                     }}
-                                                                                </div>
+                                                                                    <mat-icon
+                                                                                        >arrow_drop_up
+                                                                                    </mat-icon>
+                                                                                </Span>
                                                                                 <div
-                                                                                    class="country-1 col-md-3"
+                                                                                    class="rating"
                                                                                 >
-                                                                                    <div
-                                                                                        class="rating"
+                                                                                <ng-container *ngFor="let value of scoreIndicatorArray" >
+                                                                                    <ng-container *ngIf=" k == 0" >
+                                                                                        <span *ngIf=" value <= scoreArray[3]['Capacity Building'][i][item][j][innerData].country1; else grey"  
+                                                                                        class="green"
                                                                                     >
+                                                                                    </span>
+                                                                                    <ng-template #grey>
                                                                                         <span
-                                                                                            *ngIf="
-                                                                                                ndhsDetails[3][
-                                                                                                    object(
-                                                                                                        ndhsDetails[3]
-                                                                                                    )
-                                                                                                ][
-                                                                                                    item
-                                                                                                ][
-                                                                                                    innerData
-                                                                                                ][
-                                                                                                    question
-                                                                                                ][0]
-                                                                                                    .status ===
-                                                                                                'Yes'
-                                                                                            "
-                                                                                            class="green success"
-                                                                                        ></span>
-                                                                                        <span
-                                                                                            *ngIf="
-                                                                                                ndhsDetails[3][
-                                                                                                    object(
-                                                                                                        ndhsDetails[3]
-                                                                                                    )
-                                                                                                ][
-                                                                                                    item
-                                                                                                ][
-                                                                                                    innerData
-                                                                                                ][
-                                                                                                    question
-                                                                                                ][0]
-                                                                                                    .status ===
-                                                                                                'No'
-                                                                                            "
-                                                                                            class="alert-red danger"
-                                                                                        ></span>
-                                                                                        <span
-                                                                                            *ngIf="
-                                                                                                ndhsDetails[3][
-                                                                                                    object(
-                                                                                                        ndhsDetails[3]
-                                                                                                    )
-                                                                                                ][
-                                                                                                    item
-                                                                                                ][
-                                                                                                    innerData
-                                                                                                ][
-                                                                                                    question
-                                                                                                ][0]
-                                                                                                    .status ===
-                                                                                                undefined
-                                                                                            "
-                                                                                            class="gray disable-status"
-                                                                                        ></span>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div
-                                                                                    class="country-1 col-md-3"
-                                                                                >
-                                                                                    <div
-                                                                                        class="rating"
+                                                                                        class="gray"
+                                                                                    ></span>
+                                                                                    </ng-template>
+                                                                                    </ng-container>
+                                                                                    <ng-container *ngIf=" k == 1">
+                                                                                        <span *ngIf=" value <= scoreArray[3]['Capacity Building'][i][item][j][innerData].country2; else grey"  
+                                                                                        class="green"
                                                                                     >
+                                                                                    </span>
+                                                                                    <ng-template #grey>
                                                                                         <span
-                                                                                            *ngIf="
-                                                                                                ndhsDetails[3][
-                                                                                                    object(
-                                                                                                        ndhsDetails[3]
-                                                                                                    )
-                                                                                                ][
-                                                                                                    item
-                                                                                                ][
-                                                                                                    innerData
-                                                                                                ][
-                                                                                                    question
-                                                                                                ][1]
-                                                                                                    .status ===
-                                                                                                'Yes'
-                                                                                            "
-                                                                                            class="green success"
-                                                                                        ></span>
-                                                                                        <span
-                                                                                            *ngIf="
-                                                                                                ndhsDetails[3][
-                                                                                                    object(
-                                                                                                        ndhsDetails[3]
-                                                                                                    )
-                                                                                                ][
-                                                                                                    item
-                                                                                                ][
-                                                                                                    innerData
-                                                                                                ][
-                                                                                                    question
-                                                                                                ][1]
-                                                                                                    .status ===
-                                                                                                'No'
-                                                                                            "
-                                                                                            class="alert-red danger"
-                                                                                        ></span>
-                                                                                        <span
-                                                                                            *ngIf="
-                                                                                                ndhsDetails[3][
-                                                                                                    object(
-                                                                                                        ndhsDetails[3]
-                                                                                                    )
-                                                                                                ][
-                                                                                                    item
-                                                                                                ][
-                                                                                                    innerData
-                                                                                                ][
-                                                                                                    question
-                                                                                                ][1]
-                                                                                                    .status ===
-                                                                                                undefined
-                                                                                            "
-                                                                                            class="gray disable-status"
-                                                                                        ></span>
-                                                                                    </div>
+                                                                                        class="gray"
+                                                                                    ></span>
+                                                                                    </ng-template>
+                                                                                    </ng-container>
+                                                                                </ng-container>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-                                                                    </mat-expansion-panel>
-                                                                </div>
-                                                            </mat-accordion>
-                                                        </div>
+                                                                        <mat-panel-description>
+                                                                            <mat-icon
+                                                                                >arrow_drop_down</mat-icon
+                                                                            >
+                                                                        </mat-panel-description>
+                                                                    </mat-expansion-panel-header>
+                                                                    <div
+                                                                        *ngFor="
+                                                                            let question of object(
+                                                                                ndhsDetails[3][
+                                                                                    object(
+                                                                                        ndhsDetails[3]
+                                                                                    )
+                                                                                ][
+                                                                                    item
+                                                                                ][
+                                                                                    innerData
+                                                                                ]
+                                                                            )
+                                                                        "
+                                                                        class="content-row"
+                                                                    >
+                                                                        <div
+                                                                            class="query-right-content col-md-12"
+                                                                        >
+                                                                            <div
+                                                                                class="query-name col-md-6"
+                                                                            >
+                                                                                {{
+                                                                                    question
+                                                                                }}
+                                                                            </div>
+                                                                            <div
+                                                                                class="country-1 col-md-3"
+                                                                            >
+                                                                                <div
+                                                                                    class="rating"
+                                                                                >
+                                                                                    <span
+                                                                                        *ngIf="
+                                                                                            ndhsDetails[3][
+                                                                                                object(
+                                                                                                    ndhsDetails[3]
+                                                                                                )
+                                                                                            ][
+                                                                                                item
+                                                                                            ][
+                                                                                                innerData
+                                                                                            ][
+                                                                                                question
+                                                                                            ][0]
+                                                                                                .status ===
+                                                                                            'Yes'
+                                                                                        "
+                                                                                        class="green success"
+                                                                                    ></span>
+                                                                                    <span
+                                                                                        *ngIf="
+                                                                                            ndhsDetails[3][
+                                                                                                object(
+                                                                                                    ndhsDetails[3]
+                                                                                                )
+                                                                                            ][
+                                                                                                item
+                                                                                            ][
+                                                                                                innerData
+                                                                                            ][
+                                                                                                question
+                                                                                            ][0]
+                                                                                                .status ===
+                                                                                            'No'
+                                                                                        "
+                                                                                        class="alert-red danger"
+                                                                                    ></span>
+                                                                                    <span
+                                                                                        *ngIf="
+                                                                                            ndhsDetails[3][
+                                                                                                object(
+                                                                                                    ndhsDetails[3]
+                                                                                                )
+                                                                                            ][
+                                                                                                item
+                                                                                            ][
+                                                                                                innerData
+                                                                                            ][
+                                                                                                question
+                                                                                            ][0]
+                                                                                                .status ===
+                                                                                            undefined
+                                                                                        "
+                                                                                        class="gray disable-status"
+                                                                                    ></span>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div
+                                                                                class="country-1 col-md-3"
+                                                                            >
+                                                                                <div
+                                                                                    class="rating"
+                                                                                >
+                                                                                    <span
+                                                                                        *ngIf="
+                                                                                            ndhsDetails[3][
+                                                                                                object(
+                                                                                                    ndhsDetails[3]
+                                                                                                )
+                                                                                            ][
+                                                                                                item
+                                                                                            ][
+                                                                                                innerData
+                                                                                            ][
+                                                                                                question
+                                                                                            ][1]
+                                                                                                .status ===
+                                                                                            'Yes'
+                                                                                        "
+                                                                                        class="green success"
+                                                                                    ></span>
+                                                                                    <span
+                                                                                        *ngIf="
+                                                                                            ndhsDetails[3][
+                                                                                                object(
+                                                                                                    ndhsDetails[3]
+                                                                                                )
+                                                                                            ][
+                                                                                                item
+                                                                                            ][
+                                                                                                innerData
+                                                                                            ][
+                                                                                                question
+                                                                                            ][1]
+                                                                                                .status ===
+                                                                                            'No'
+                                                                                        "
+                                                                                        class="alert-red danger"
+                                                                                    ></span>
+                                                                                    <span
+                                                                                        *ngIf="
+                                                                                            ndhsDetails[3][
+                                                                                                object(
+                                                                                                    ndhsDetails[3]
+                                                                                                )
+                                                                                            ][
+                                                                                                item
+                                                                                            ][
+                                                                                                innerData
+                                                                                            ][
+                                                                                                question
+                                                                                            ][1]
+                                                                                                .status ===
+                                                                                            undefined
+                                                                                        "
+                                                                                        class="gray disable-status"
+                                                                                    ></span>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </mat-expansion-panel>
+                                                            </div>
+                                                        </mat-accordion>
                                                     </div>
-                                                </mat-expansion-panel>
-                                            </ng-container>
-                                        </mat-accordion>
+                                                </div>
+                                            </mat-expansion-panel>
+                                        </ng-container>
+                                    </mat-accordion>
                                     </div>
                                     <div
                                         class="list hide"
@@ -1685,7 +1765,7 @@
                                                     ndhsDetails[2][
                                                         object(ndhsDetails[2])
                                                     ]
-                                                )
+                                                );let i = index
                                             "
                                         >
                                             <ng-container>
@@ -1714,7 +1794,7 @@
                                                                                 ndhsDetails[2]
                                                                             )
                                                                         ][item]
-                                                                    )
+                                                                    ); let j = index
                                                                 "
                                                             >
                                                                 <div
@@ -1758,7 +1838,7 @@
                                                                                                     innerData
                                                                                                 ]
                                                                                             )[0]
-                                                                                        ]
+                                                                                        ]; let k = index
                                                                                     "
                                                                                     class="country-1"
                                                                                 >
@@ -1773,14 +1853,30 @@
                                                                                     <div
                                                                                         class="rating"
                                                                                     >
-                                                                                        <ng-container>
+                                                                                    <ng-container *ngFor="let value of scoreIndicatorArray" >
+                                                                                        <ng-container *ngIf=" k == 0" >
+                                                                                            <span *ngIf=" value <= scoreArray[2]['Development Strategy'][i][item][j][innerData].country1; else grey"  
+                                                                                            class="green"
+                                                                                        >
+                                                                                        </span>
+                                                                                        <ng-template #grey>
                                                                                             <span
-                                                                                                class="green"
-                                                                                            ></span>
-                                                                                            <span
-                                                                                                class="gray"
-                                                                                            ></span>
+                                                                                            class="gray"
+                                                                                        ></span>
+                                                                                        </ng-template>
                                                                                         </ng-container>
+                                                                                        <ng-container *ngIf=" k == 1">
+                                                                                            <span *ngIf=" value <= scoreArray[2]['Development Strategy'][i][item][j][innerData].country2; else grey"  
+                                                                                            class="green"
+                                                                                        >
+                                                                                        </span>
+                                                                                        <ng-template #grey>
+                                                                                            <span
+                                                                                            class="gray"
+                                                                                        ></span>
+                                                                                        </ng-template>
+                                                                                        </ng-container>
+                                                                                    </ng-container>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -2022,7 +2118,7 @@
                                             class="progress-heading"
                                             *ngIf="i % 2 == 0"
                                         >
-                                            <span>
+                                            <span (click)="setTaxonomy(item)"  >
                                                 {{ item.taxonomy }}
                                             </span>
                                         </div>
@@ -2044,7 +2140,7 @@
                                                 aria-valuemax="100"
                                             ></div>
                                             <Span>
-                                                {{ item.percentage }}%
+                                                {{ item.percentage | number : '1.0-0'}}%
                                             </Span>
                                         </div>
                                     </div>

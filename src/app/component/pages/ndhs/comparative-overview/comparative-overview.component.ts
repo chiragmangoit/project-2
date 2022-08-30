@@ -1479,7 +1479,6 @@ export class ComparativeOverviewComponent implements OnInit {
                 governanceId: value.g_id,
                 taxonomyId: value.t_id,
                 ultimateId: value.u_id,
-                year: value.year,
             };
 
             this.common.getTaxonomyTabledetails(tableChart).subscribe((val) => {
@@ -1663,6 +1662,7 @@ export class ComparativeOverviewComponent implements OnInit {
         chart.padding(0, 0, 0, 0);
 
         let categoryAxis = chart.yAxes.push(new am4charts.CategoryAxis());
+        categoryAxis.renderer.disabled = true
         categoryAxis.renderer.grid.template.location = 0;
         categoryAxis.dataFields.category = 'network';
         categoryAxis.renderer.minGridDistance = 1;
@@ -1726,44 +1726,6 @@ export class ComparativeOverviewComponent implements OnInit {
 
             },
         ];
-
-        // am4core.useTheme(am4themes_animated);
-        // var chart = am4core.create('barGraph', am4charts.XYChart);
-
-        // // Add data
-        // chart.data = [
-        //     {
-        //         category: '100',
-        //         value: 100,
-        //     },
-        //     {
-        //         category: '80',
-        //         value: 80,
-        //     },
-        //     {
-        //         category: '60',
-        //         value: 60,
-        //     },
-        //     {
-        //         category: '30',
-        //         value: 30,
-        //     },
-        // ];
-
-        // var categoryAxis = chart.yAxes.push(new am4charts.CategoryAxis());
-        // categoryAxis.dataFields.category = 'category';
-        // categoryAxis.renderer.grid.template.location = 0;
-
-        // var valueAxis = chart.xAxes.push(new am4charts.ValueAxis());
-
-        // var series = chart.series.push(new am4charts.ColumnSeries());
-        // series.dataFields.valueX = 'value';
-        // series.dataFields.categoryY = 'category';
-
-        // var valueLabel = series.bullets.push(new am4charts.LabelBullet());
-        // valueLabel.label.text = '{value}';
-        // valueLabel.label.fontSize = 20;
-        // valueLabel.label.horizontalCenter = 'right';
     }
 
     radarChart(sort: any) {

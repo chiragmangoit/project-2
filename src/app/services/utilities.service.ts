@@ -7,8 +7,8 @@ import { BehaviorSubject, Subject } from 'rxjs';
 export class UtilitiesService {
     defaultNodeData = {
         d_id: '1,2',
-        g_id: localStorage.getItem('governance_id'),
-        t_id: 1,
+        g_id: JSON.parse(localStorage.getItem('governance_id') || ''),
+        t_id: 6,
         u_id: 2,
         countries: localStorage.getItem('selected_country'),
         year: '2022,2021',
@@ -16,6 +16,7 @@ export class UtilitiesService {
 
     defaultCountry = {
         countries: localStorage.getItem('selected_country'),
+        year:  JSON.parse(localStorage.getItem('year') || ''),
     };
     constructor() {}
     emitGovernance = new BehaviorSubject<any>(1);

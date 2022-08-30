@@ -45,8 +45,8 @@ export class ComparativeResultDetailComponent implements OnInit {
     barChartData: any = [];
     taxnomyId: number | undefined;
     governancetext: string | undefined;
-    actualScore: number = 0;
-    indicatorScore: number = 0;
+    scoreArray: any = [];
+    scoreIndicatorArray:any = [1,2,3,4,5]
 
     @ViewChild('mySelect') mySelect: ElementRef | any;
 
@@ -139,8 +139,7 @@ export class ComparativeResultDetailComponent implements OnInit {
 
         let data = {
             countries: this.countrySelected,
-            governances: this.governanceId,
-            year: this.currentYear,
+            governanceId: this.governanceId,
         };
 
         this.subscription.add(
@@ -165,6 +164,7 @@ export class ComparativeResultDetailComponent implements OnInit {
                 this.selectedCountry.forEach((country: any) => {
                     if (country.country_id === data.id) {
                         this.selectedCountryName.push(country.country_name);
+
                         if (this.mySelections.length <= 1) {
                             this.mySelections.push(country.country_id);
                             this.toppings.setValue(this.mySelections);
@@ -184,10 +184,10 @@ export class ComparativeResultDetailComponent implements OnInit {
 
         let barChartData = {
             developmentId: this.developmentId,
-            governances: this.governanceId.toString(),
+            governanceId: this.governanceId,
             taxonomyId: this.taxnomyId,
             ultimateId: this.ultimateId,
-            year: this.currentYear,
+            year: this.currentYear.toString(),
         };
 
         this.subscription.add(
@@ -282,6 +282,7 @@ export class ComparativeResultDetailComponent implements OnInit {
                     this.countrySelected = this.mySelections.toString();
                     let defaultCountry = {
                         countries: this.countrySelected,
+                        year: JSON.parse(localStorage.getItem('year') || ''),
                     };
                     this.utilityService.emitDefaultCountries.next(
                         defaultCountry
@@ -333,49 +334,74 @@ export class ComparativeResultDetailComponent implements OnInit {
     }
 
     calculateScore() {
+        this.scoreArray = [];
         this.ndhsDetails.forEach((element: any) => {
+            let outerArray: any = [];
             this.object(element[this.object(element)[0]]).forEach(
                 (innerElement: any) => {
-                    let actualScore1 = 0;
-                        let actualScore2 = 0;
-                        let indiacatorScore1 = 0;
-                        let indiacatorScore2 = 0;
+                    let innerarray: { [x: number]: { country1: number; country2: number; }; }[] = [];
                     // this.log(innerElement);
                     this.object(
                         element[this.object(element)[0]][innerElement]
                     ).forEach((items: any) => {
-                        // console.log(items);
+                        let actualScore1 = 0;
+                        let actualScore2 = 0;
+                        let indiacatorScore1 = 0;
+                        let indiacatorScore2 = 0;
+                        let country1Score = 0;
+                        let country2Score = 0;
                         this.object(
                             element[this.object(element)[0]][innerElement][
                                 items
                             ]
                         ).forEach((inneritem: any) => {
-                            actualScore1 +=  element[this.object(element)[0]][innerElement][
-                                items
-                            ][inneritem][0].actual_score;
+                            actualScore1 =
+                                element[this.object(element)[0]][innerElement][
+                                    items
+                                ][inneritem][0].actual_score;
 
-                            actualScore2 +=  element[this.object(element)[0]][innerElement][
-                                items
-                            ][inneritem][1].actual_score;
+                            actualScore2 =
+                                element[this.object(element)[0]][innerElement][
+                                    items
+                                ][inneritem][1].actual_score;
 
-                            indiacatorScore1 +=  element[this.object(element)[0]][innerElement][
-                                items
-                            ][inneritem][1].indicator_score;
+                            indiacatorScore1 =
+                                element[this.object(element)[0]][innerElement][
+                                    items
+                                ][inneritem][1].indicator_score;
 
-                            indiacatorScore2 +=  element[this.object(element)[0]][innerElement][
-                                items
-                            ][inneritem][1].indicator_score;
+                            indiacatorScore2 =
+                                element[this.object(element)[0]][innerElement][
+                                    items
+                                ][inneritem][1].indicator_score;
+
+                            country1Score += 
+                                (actualScore1 / indiacatorScore1) * 100
+                            
+                            country2Score += 
+                                (actualScore2 / indiacatorScore2) * 100
+                            
                         });
-                        console.log({ [items] : {
-                            actualScore : Math.round(Math.round((actualScore1/indiacatorScore1)* 100)/20),
-                            indiacatorScore: Math.round(Math.round((actualScore2/indiacatorScore2)* 100)/20),
-                
-                        } });
-                        
+                        innerarray.push({
+                            [items]: {
+                                country1: Math.round(country1Score/20),
+                                country2: Math.round(country2Score/20)
+                            },
+                        });
+                    });
+                    outerArray.push({
+                        [innerElement]: innerarray,
                     });
                 }
             );
+            this.scoreArray.push({ [this.object(element)]: outerArray });
         });
-        console.log(this.ndhsDetails);
+    }
+
+    setTaxonomy(item:any) {
+       this.taxnomyId = item.taxonomy_id;
+       this.governancetext = item.taxonomy;
+       this.getBarChartData();
+        
     }
 }

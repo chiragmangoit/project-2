@@ -12,6 +12,6 @@ export class MainMapService {
     public baseUrl = environment.baseUrl;
 
     public getCountries(): Observable<any> {
-       return this.http.get(this.baseUrl + 'ndhs-master/countryList');
+       return this.http.get(this.baseUrl + 'ndhs-master/country-list?groupBy=year');
     }
 }

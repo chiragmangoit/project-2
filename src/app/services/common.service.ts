@@ -18,7 +18,7 @@ export class CommonService {
     ): Observable<any> {
         return this.http.get(
             this.baseUrl +
-                'ndhs-master/details/' +
+                'ndhs-master/governance-stats/' +
                 governance_id +
                 '/' +
                 country_id +
@@ -103,7 +103,7 @@ export class CommonService {
 
     public getComparativeOverview(data: any): Observable<any> {
         return this.http.post(
-            this.baseUrl + 'ndhs-master/comparative-overview',
+            this.baseUrl + 'ndhs-master/overview',
             data
         );
     }
@@ -125,7 +125,7 @@ export class CommonService {
     }
 
     public getAllCountries(): Observable<any> {
-        return this.http.get(this.baseUrl + 'ndhs-master/existed-countries-list' );
+        return this.http.get(this.baseUrl + 'ndhs-master/country-list' );
     }
 
     public getTaxonomyTabledetails(data: any): Observable<any> {
@@ -133,19 +133,19 @@ export class CommonService {
     }
 
     public getOverviewBarChart(data: any): Observable<any> {
-        return this.http.post(this.baseUrl + 'ndhs-master/bar-chart', data);
+        return this.http.post(this.baseUrl + 'ndhs-master/stats-graph', data);
     }
 
     public getOverviewBubbleChart(data: any): Observable<any> {
-        return this.http.post(this.baseUrl + 'ndhs-master/bubble-chart', data);
+        return this.http.post(this.baseUrl + 'ndhs-master/stats-graph', data);
     }
 
     public getOverviewRadarChart(data: any): Observable<any> {
-        return this.http.post(this.baseUrl + 'ndhs-master/radar-chart', data);
+        return this.http.post(this.baseUrl + 'ndhs-master/stats-graph', data);
     }
 
     public getdefaultCountry(data: any): Observable<any> {
-        return this.http.post(this.baseUrl + 'ndhs-master/default-country', data);
+        return this.http.post(this.baseUrl + 'ndhs-master/countries-with-year', data);
     }
 
     
