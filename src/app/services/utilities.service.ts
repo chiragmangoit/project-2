@@ -8,7 +8,7 @@ export class UtilitiesService {
     defaultNodeData = {
         d_id: '1,2',
         g_id: JSON.parse(localStorage.getItem('governance_id') || ''),
-        t_id: 6,
+        t_id: 1,
         u_id: 2,
         countries: localStorage.getItem('selected_country'),
         year: '2022,2021',

@@ -65,7 +65,7 @@ export class NdhsCountriesComponent implements OnInit {
                 )
                 .subscribe((data) => {
                     for (const key in data) {
-                        this.ndhsDetails.push({ [key]: data[key] });
+                        this.ndhsDetails.push({ [key]: [data[key]] });
                     }
                 })
         );

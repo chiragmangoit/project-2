@@ -45,14 +45,14 @@ export class ProspectiveDevelopmentComponent implements OnInit, OnDestroy {
         this.governanceId = JSON.parse(
             localStorage.getItem('governance_id') || ''
         );
+        let dataInput = {
+            countries: this.countryId,
+            development_id: 2,
+            governanceId: this.governanceId,
+        };
         this.subscription.add(
             this.apiService
-                .getViewData(
-                    this.governanceId,
-                    2,
-                    this.countryId,
-                    this.currentYear
-                )
+                .getComparativeOverview(dataInput)
                 .subscribe((data) => {
                     let key: any = object.keys(data);
                     this.viewData = data[key];
@@ -66,7 +66,7 @@ export class ProspectiveDevelopmentComponent implements OnInit, OnDestroy {
     handlePrint() {
         window.print();
     }
-    
+
     ngOnDestroy(): void {
         this.subscription.unsubscribe();
         this.utilityService.header.next(false);

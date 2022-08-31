@@ -8,6 +8,7 @@ import { MainMapService } from 'src/app/services/main-map.service';
 import { Router } from '@angular/router';
 import { UtilitiesService } from 'src/app/services/utilities.service';
 
+
 @Component({
     selector: 'app-ndhs-map',
     templateUrl: './ndhs-map.component.html',
@@ -25,7 +26,7 @@ export class NdhsMapComponent implements OnInit, AfterViewInit {
     constructor(
         private router: Router,
         private mapService: MainMapService,
-        private utilityService: UtilitiesService
+        private utilityService: UtilitiesService,
     ) {}
 
     ngOnInit(): void {

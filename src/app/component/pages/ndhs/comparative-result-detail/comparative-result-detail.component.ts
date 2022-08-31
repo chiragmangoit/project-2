@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import * as am5 from '@amcharts/amcharts5';
 import * as $ from 'jquery';
 import { EChartsOption } from 'echarts/types/dist/echarts';
@@ -13,7 +13,7 @@ import { Subscription } from 'rxjs';
     templateUrl: './comparative-result-detail.component.html',
     styleUrls: ['./comparative-result-detail.component.css'],
 })
-export class ComparativeResultDetailComponent implements OnInit {
+export class ComparativeResultDetailComponent implements OnInit, OnDestroy {
     countryId: any;
     currentYear: any;
     governanceId: any;
@@ -403,5 +403,9 @@ export class ComparativeResultDetailComponent implements OnInit {
        this.governancetext = item.taxonomy;
        this.getBarChartData();
         
+    }
+
+    ngOnDestroy(): void {
+        this.utilityService.header.next(false);
     }
 }

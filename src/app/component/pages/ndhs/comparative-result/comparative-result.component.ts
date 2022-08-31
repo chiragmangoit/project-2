@@ -13,6 +13,8 @@ import am5geodata_worldLow from '@amcharts/amcharts5-geodata/worldLow';
 import { MainMapService } from 'src/app/services/main-map.service';
 import { UtilitiesService } from 'src/app/services/utilities.service';
 import { CommonService } from 'src/app/services/common.service';
+import data from 'src/assets/data/network.json';
+import * as echarts from 'echarts';
 
 @Component({
     selector: 'app-comparative-result',
@@ -40,7 +42,10 @@ export class ComparativeResultComponent implements OnInit, AfterViewInit {
     object: any = Object.keys;
     log: any = console.log;
 
+    @ViewChild('main') main: ElementRef | any;
     @ViewChild('mySelect') mySelect: ElementRef | any;
+
+    graph = data;
 
     constructor(
         private mapService: MainMapService,
@@ -50,6 +55,7 @@ export class ComparativeResultComponent implements OnInit, AfterViewInit {
 
     ngAfterViewInit(): void {
         this.setMap();
+        this.nodeChart();
     }
 
     ngOnInit(): void {
@@ -412,4 +418,38 @@ export class ComparativeResultComponent implements OnInit, AfterViewInit {
         this.resultArray[0]['Present Development'].splice(2, 2);
         console.log(this.resultArray);
     }
+
+    nodeChart() {
+        let chartDom = this.main.nativeElement;
+        let nodechart = echarts.init(chartDom);
+        let option: any;
+        option = {
+            tooltip: {},
+            animationDuration: 1500,
+            animationEasingUpdate: 'quinticInOut',
+            series: [
+                {
+                    name: '',
+                    type: 'graph',
+                    layout: 'none',
+                    data: this.graph.nodes,
+                    links: this.graph.links,
+                    categories: this.graph.categories,
+                    roam: true,
+                    label: {
+                        position: 'right',
+                        formatter: '{b}',
+                    },
+                    lineStyle: {
+                        color: 'source',
+                        curveness: 0.3,
+                    },
+                },
+            ],
+        };
+        nodechart.setOption(option);
+
+    }
+
+    
 }

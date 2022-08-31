@@ -44,22 +44,20 @@ export class ViewDataComponent implements OnInit {
         this.governanceId = JSON.parse(
             localStorage.getItem('governance_id') || ''
         );
+        let dataInput = {
+            countries: this.countryId,
+            development_id: 1,
+            governanceId: this.governanceId,
+        };
         this.subscription.add(
             this.apiService
-                .getViewData(
-                    this.governanceId,
-                    1,
-                    this.countryId,
-                    this.currentYear
-                )
+                .getComparativeOverview(dataInput)
                 .subscribe((data) => {
                     let key: any = object.keys(data);
                     this.viewData = data[key];
                     for (const key in this.viewData) {
                         this.ndhsDetails.push({ [key]: this.viewData[key] });
                     }
-                    //    console.log(this.object(this.viewData['Availability']));
-                    // console.log(this.ndhsDetails);
                 })
         );
     }

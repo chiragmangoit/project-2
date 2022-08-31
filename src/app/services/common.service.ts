@@ -29,16 +29,13 @@ export class CommonService {
 
     public getViewData(
         governance_id: number,
-        development_id: number,
         country_id: number,
         year: number
     ): Observable<any> {
         return this.http.get(
             this.baseUrl +
-                'ndhs-master/view-detail/' +
+                'ndhs-master/governance-stats/' +
                 governance_id +
-                '/' +
-                development_id +
                 '/' +
                 country_id +
                 '/' +

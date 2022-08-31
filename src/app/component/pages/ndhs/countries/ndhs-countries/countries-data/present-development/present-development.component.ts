@@ -45,14 +45,14 @@ export class PresentDevelopmentComponent implements OnInit, OnDestroy {
         this.governanceId = JSON.parse(
             localStorage.getItem('governance_id') || ''
         );
+        let dataInput = {
+            countries: this.countryId,
+            development_id: 1,
+            governanceId: this.governanceId,
+        };
         this.subscription.add(
             this.apiService
-                .getViewData(
-                    this.governanceId,
-                    1,
-                    this.countryId,
-                    this.currentYear
-                )
+                .getComparativeOverview(dataInput)
                 .subscribe((data) => {
                     let key: any = object.keys(data);
                     this.viewData = data[key];
