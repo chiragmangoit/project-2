@@ -2468,7 +2468,7 @@
                                                     "
                                                     class="progress-bar"
                                                     role="progressbar"
-                                                    style="width: 250px"
+                                                    [style.width]="item.percentage + '%'"
                                                     aria-valuenow="item.score"
                                                     aria-valuemin="0"
                                                     aria-valuemax="100"

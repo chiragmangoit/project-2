@@ -16,7 +16,6 @@ export class ProspectiveDevelopmentComponent implements OnInit, OnDestroy {
     ndhsDetails: any = [];
     viewData: any;
     object: any = object.keys;
-    log: any = console.log;
     countryName: any;
     subscription: Subscription = new Subscription();
 

@@ -17,7 +17,6 @@ export class NdhsCountriesComponent implements OnInit {
     governanceId: any;
     ndhsDetails: any = [];
     object: any = object.keys;
-    log: any = console.log;
     countryName: any;
     subscription: Subscription = new Subscription();
     Allcountry: any;

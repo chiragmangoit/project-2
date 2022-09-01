@@ -14,11 +14,9 @@ import { Subscription } from 'rxjs';
     styleUrls: ['./comparative-result-detail.component.css'],
 })
 export class ComparativeResultDetailComponent implements OnInit, OnDestroy {
-    countryId: any;
     currentYear: any;
     governanceId: any;
     ndhsDetails: any;
-    viewData: any;
     countryName: any;
     chartOptionBar: EChartsOption = {};
     toppings = new FormControl();
@@ -33,7 +31,6 @@ export class ComparativeResultDetailComponent implements OnInit, OnDestroy {
     countrySelected: string | null | undefined;
     oldSelections: string[] = [];
     object: any = Object.keys;
-    log: any = console.log;
     subscription: Subscription = new Subscription();
     developmentId!: number;
     ultimateId!: number;
@@ -144,8 +141,7 @@ export class ComparativeResultDetailComponent implements OnInit, OnDestroy {
 
         this.subscription.add(
             this.apiService.getComparativeOverview(data).subscribe((data) => {
-                this.ndhsDetails = [];
-                // this.log(data[this.object(data)[0]]);
+                this.ndhsDetails = [];        
                 let key: any = Object.keys(data);
                 key.forEach((element: any) => {
                     for (const key in data[element]) {

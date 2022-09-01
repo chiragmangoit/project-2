@@ -16,6 +16,10 @@ import * as am4charts from '@amcharts/amcharts4/charts';
 import am4themes_animated from '@amcharts/amcharts4/themes/animated';
 import * as am4plugins_forceDirected from '@amcharts/amcharts4/plugins/forceDirected';
 
+import * as am5xy from '@amcharts/amcharts5/xy';
+import am5themes_Animated from '@amcharts/amcharts5/themes/Animated';
+import * as am5 from '@amcharts/amcharts5';
+
 @Component({
     selector: 'app-comparative-overview',
     templateUrl: './comparative-overview.component.html',
@@ -23,13 +27,10 @@ import * as am4plugins_forceDirected from '@amcharts/amcharts4/plugins/forceDire
 })
 export class ComparativeOverviewComponent implements OnInit {
     chartOptionRadar: any;
-    countryName: any;
-    countryId: any;
     currentYear: any;
     governanceId: any;
     developmentId: any;
     taxonomyId: any;
-    selectedYear: any;
     selectedCountries: any;
     availibilityScore: any;
     capacityScore: any;
@@ -39,29 +40,32 @@ export class ComparativeOverviewComponent implements OnInit {
     score: any;
     newScore: any = [];
     sort: any;
-    chartOptionNode: any;
     thirty: any = [];
     sixty: any = [];
     eighty: any = [];
     hundred: any = [];
     toggle: any = true;
-    object = Object.keys;
+    object: any = Object.keys;
     barchartData: any;
-    sortedTableData: any;
+    sortedTableData: any = [];
     tableScoreArray: any;
     governanceName: string = 'General Health';
     ultimateName: any = 'HealthCare Governance';
     developmentName: string = 'Present Development';
     ultimate: string = 'Availability ';
+    log: any = console.log;
+    tableData: any = [];
+    graph!: { categories: any[]; nodes: any; links: any };
+    barchartData_new: any;
 
     @ViewChild('main') main: ElementRef | any;
+    
     constructor(
         private common: CommonService,
         private utilityService: UtilitiesService,
         private cd: ChangeDetectorRef
     ) {}
 
-    graph!: { categories: any[]; nodes: any; links: any };
 
     ngOnInit(): void {
         this.graph = data;
@@ -106,52 +110,7 @@ export class ComparativeOverviewComponent implements OnInit {
                 ultimateId: value.u_id,
             };
 
-            this.common.getTaxonomyTabledetails(tableChart).subscribe((val) => {
-                // console.log(val);
-
-                val.forEach((tableSort: any) => {
-                    // console.log(tableSort);
-
-                    this.sortedTableData = val.reduce(
-                        (
-                            group: { [x: string]: any[] },
-                            product: { indicator_id: any }
-                        ) => {
-                            const { indicator_id } = product;
-                            group[indicator_id] = group[indicator_id] ?? [];
-                            group[indicator_id].push(product);
-                            return group;
-                        },
-                        {}
-                    );
-                });
-                // console.log(this.sortedTableData);
-
-                // console.log(val);
-                // val.forEach((element: any) => {
-                //     console.log(element);
-                // });
-            });
-
-            this.common.getOverviewBarChart(barData).subscribe((val) => {
-                this.barchartData = [];
-                val.forEach((element: any) => {
-                    this.barchartData.push({
-                        isoCode: element.iso_code,
-                        percentage: element.percentage,
-                    });
-                });
-                console.log(this.barchartData);
-
-                // val.forEach((element: any) => {
-                //     console.log(element);
-                // });
-            });
-
-            // console.log(data);
             this.common.getOverviewRadarChart(data).subscribe((val) => {
-                // console.log(val);
-                // console.log(val);
                 this.sort = val.reduce(
                     (
                         group: { [x: string]: any[] },
@@ -169,12 +128,103 @@ export class ComparativeOverviewComponent implements OnInit {
                 this.radarChart(this.sort);
             });
 
+            this.common.getTaxonomyTabledetails(tableChart).subscribe((val) => {
+                this.tableData = [];
+                this.sortedTableData = [];
+                function myFunc(obj: any[], prop: string) {
+                    return obj.reduce(function (acc, item) {
+                        let key = item[prop];
+                        if (!acc[key]) {
+                            acc[key] = [];
+                        }
+                        if (prop == 'q_indicator_id') {
+                            if (
+                                acc[key].findIndex(
+                                    (x: { q_indicator_id: any }) =>
+                                        x.q_indicator_id === item.q_indicator_id
+                                ) === -1
+                            ) {
+                                acc[key].push(item);
+                            }
+                        } else {
+                            acc[key].push(item);
+                        }
+                        return acc;
+                    }, {});
+                }
+                let sortByTaxonomy = myFunc(val, 'indicator_name');
+                let keys = Object.keys(sortByTaxonomy);
+                keys.forEach((element) => {
+                    let sortByQuestion = myFunc(
+                        sortByTaxonomy[element],
+                        'question'
+                    );
+                    this.tableData.push({ [element]: sortByQuestion });
+                    let score1 = 0;
+                    let score2 = 0;
+                    sortByTaxonomy[element].forEach((item: any) => {
+                        if (item.c_name === this.compareCountry[0]) {
+                            score1 +=
+                                (item.actual_score / item.indicator_score) *
+                                100;
+                        } else {
+                            score2 +=
+                                (item.actual_score / item.indicator_score) *
+                                100;
+                        }
+                    });
+                    this.sortedTableData.push({
+                        [element]: [score1 / 20, score2 / 20],
+                    });
+                });
+            });
+
+            this.common.getOverviewBarChart(barData).subscribe((val) => {
+                this.barchartData = val;
+                this.barchartData_new = [];
+                let bar_data = {
+                    text: val[0].country_name + ',' + val[1].country_name,
+                    comIncome:
+                        Math.round(val[0].percentage) + '%,' +  Math.round(val[1].percentage) + '%',
+                    compText: val[0].country_name + ',' + val[1].country_name,
+                    img: './assets/images/line.png',
+                    per: Math.round(val[0].percentage),
+                };
+                
+                if (val[0].percentage <= 25 && val[1].percentage <= 25) {
+                    this.barchartData_new.push(bar_data);
+                }
+                if (
+                    val[0].percentage > 25 &&
+                    val[0].percentage <= 60 &&
+                    val[1].percentage > 25 &&
+                    val[1].percentage <= 60
+                ) {
+                    this.barchartData_new.push(bar_data);
+                } else if (
+                    val[0].percentage > 60 &&
+                    val[0].percentage <= 80 &&
+                    val[1].percentage > 60 &&
+                    val[1].percentage <= 80
+                ) {
+                    this.barchartData_new.push(bar_data);
+                } else if (
+                    val[0].percentage > 80 &&
+                    val[0].percentage <= 100 &&
+                    val[1].percentage > 80 &&
+                    val[1].percentage <= 100
+                ) {
+                    this.barchartData_new.push(bar_data);
+                }
+                
+                this.BarChart();
+            });
+
             this.common.getOverviewBubbleChart(bubbleData).subscribe((bub) => {
                 this.thirty = [];
                 this.sixty = [];
                 this.eighty = [];
                 this.hundred = [];
-                // console.log(bub);
                 bub.forEach((bubData: any) => {
                     if (bubData.percentage <= 30) {
                         this.thirty.push({
@@ -210,10 +260,7 @@ export class ComparativeOverviewComponent implements OnInit {
                 this.bubbleChart();
             });
         });
-
-        // this.BarChart();
-
-        this.barChart();
+        this.BarChart();
     }
 
     ngAfterViewInit() {
@@ -239,7 +286,6 @@ export class ComparativeOverviewComponent implements OnInit {
             tooltip: {},
             legend: [
                 {
-                    // selectedMode: 'single',
                     data: this.graph.categories.map(function (a) {
                         return a.name;
                     }),
@@ -318,116 +364,6 @@ export class ComparativeOverviewComponent implements OnInit {
         });
     }
 
-    barChart() {
-        am4core.useTheme(am4themes_animated);
-        // Themes end
-
-        let chart = am4core.create('barGraph', am4charts.XYChart);
-        chart.padding(0, 0, 0, 0);
-
-        let categoryAxis = chart.yAxes.push(new am4charts.CategoryAxis());
-        categoryAxis.renderer.disabled = true;
-        categoryAxis.renderer.grid.template.location = 0;
-        categoryAxis.dataFields.category = 'network';
-        categoryAxis.renderer.minGridDistance = 1;
-        categoryAxis.renderer.inversed = false;
-        categoryAxis.renderer.grid.template.disabled = true;
-
-        let valueAxis = chart.xAxes.push(new am4charts.ValueAxis());
-        valueAxis.min = 0;
-
-        let series = chart.series.push(new am4charts.ColumnSeries());
-        series.dataFields.categoryY = 'network';
-        series.dataFields.valueX = 'MAU';
-        series.tooltipText = '{valueX.value}';
-        series.columns.template.strokeOpacity = 0;
-        series.columns.template.column.cornerRadiusBottomRight = 5;
-        series.columns.template.column.cornerRadiusTopRight = 5;
-
-        let labelBullet = series.bullets.push(new am4charts.LabelBullet());
-        labelBullet.label.horizontalCenter = 'left';
-        labelBullet.label.dx = 10;
-
-    //     var title2 = chart.titles.create();
-
-    //     title2.html =
-    //         `<div style="background: #000;
-    //       color: #fff;
-    //       width: 50px;
-    //       height: 200px;
-    //       text-align: center;
-    //       border-radius: 15px 0px 0 15px;">
-    //       <div style="transform: rotate(-90deg);
-    //       position: absolute;
-    //       left: -50px;
-    //       top: 38%;">
-    //       <label style="font-size: 12px;
-    //       width: 150px;
-    //       position: relative;
-    //       top: 48%;
-    //       height: 100%;
-    //   display: inherit;">` +
-    //        this.developmentName +
-    //         `
-    //           </label>
-    //       <span style="font-size: 12px;"><b> ` +
-    //         this.ultimate +
-    //         `</b><span>
-    //       <div>
-    //       </div>`;
-    //     title2.align = 'left';
-    //     title2.rotation = 0;
-    //     title2.marginBottom = -180;
-
-    //     var title = chart.titles.create();
-    //     // title.text = this.rangeB30[0].taxonomy_name;
-    //     title.marginTop = 0;
-    //     title.marginBottom = 30;
-    //     title.marginLeft = 60;
-    //     title.fontSize = 15;
-    //     title.fontWeight = 'bold';
-    //     title.align = 'center';
-
-        setTimeout(() => {
-            console.log(labelBullet.clones.values);
-        }, 1000);
-        labelBullet.label.html = `
-        <div style="margin-bottom: -12px;margin-left: 30px;">{columnConfig.name}{columnConfig.per}</div>
-        <div style="margin-bottom: 0px;">
-        <img src="{columnConfig.img}" width="100">
-        </div>
-        `;
-        labelBullet.label.paddingLeft = 160;
-        labelBullet.label.paddingBottom = 50;
-
-        labelBullet.locationX = 1;
-
-        categoryAxis.sortBySeries = series;
-        chart.data = [
-            {
-                network: 'Facebook',
-                MAU: 30,
-            },
-            {
-                network: 'Google+',
-                MAU: 60,
-            },
-            {
-                network: 'Instagram',
-                MAU: 80,
-            },
-            {
-                network: 'Pinterest',
-                MAU: 100,
-                columnConfig: {
-                    name: 'UK',
-                    per: '90%',
-                    img: './assets/images/line.png',
-                },
-            },
-        ];
-    }
-
     radarChart(sort: any) {
         let keys = Object.keys(sort);
         keys.forEach((key) => {
@@ -449,11 +385,9 @@ export class ComparativeOverviewComponent implements OnInit {
                 this.capacityScore,
                 this.developmentScore,
                 this.readinessScore,
-                // compareCountry: this.compareCountry,
             ];
             this.newScore.push(this.score);
         });
-        // console.log(this.newScore);
         this.compareCountry = [...new Set(this.compareCountry)];
         this.chartOptionRadar = {
             title: {},
@@ -642,5 +576,273 @@ export class ComparativeOverviewComponent implements OnInit {
 
         series.nodes.template.outerCircle.strokeOpacity = 0;
         series.nodes.template.outerCircle.fillOpacity = 0;
+    }
+
+    BarChart() {
+        if (this.barchartData) {
+            //let root:any;
+            am5.array.each(am5.registry.rootElements, function (root) {
+                if (root && root.dom && root.dom.id == 'chartdiv2') {
+                    root.dispose();
+                }
+            });
+            let root = am5.Root.new('chartdiv2');
+    
+            // Set themes
+            // https://www.amcharts.com/docs/v5/concepts/themes/
+            root.setThemes([am5themes_Animated.new(root)]);
+    
+            // Create chart
+            // https://www.amcharts.com/docs/v5/charts/xy-chart/
+            let chart: any = root.container.children.push(
+                am5xy.XYChart.new(root, {
+                    panX: false,
+                    panY: false,
+                    wheelX: 'none',
+                    wheelY: 'none',
+                })
+            );
+    
+            let data = [
+                {
+                    year: '1',
+                    income: 100,
+                    columnConfig: {
+                        fill: am5.color(0x00306c),
+                    },
+                },
+                {
+                    year: '2',
+                    income: 75,
+                    columnConfig: {
+                        fill: am5.color(0x4a92ec),
+                    },
+                },
+                {
+                    year: '3',
+                    income: 50,
+                    columnConfig: {
+                        fill: am5.color(0x4aec9b),
+                    },
+                },
+                {
+                    year: '4',
+                    income: 25,
+                    columnConfig: {
+                        fill: am5.color(0xfa8e15),
+                    },
+                },
+            ];
+    
+            if (this.barchartData_new.length == 1) {
+                this.barchartData_new.forEach((element: any) => {
+                    let bar_data_same = {
+                        text: element.text,
+                        comIncome: element.comIncome,
+                        compText: element.compText,
+                        img: './assets/images/line.png',
+                    };
+                    if (element.per <= 25) {
+                        data[3] = { ...data[3], ...bar_data_same };
+                    } else if (element.per <= 50) {
+                        data[2] = { ...data[2], ...bar_data_same };
+                    } else if (element.per <= 75) {
+                        data[1] = { ...data[1], ...bar_data_same };
+                    } else if (element.per <= 100) {
+                        data[0] = { ...data[0], ...bar_data_same };
+                    }
+                });
+            } else {
+                this.barchartData.forEach((element: any) => {
+                    let bar_data = {
+                        text: element.country_name,
+                        comIncome: element.percentage + '%',
+                        compText: element.country_name,
+                        img: './assets/images/line.png',
+                    };
+                    if (element.percentage <= 25) {
+                        data[3] = { ...data[3], ...bar_data };
+                    } else if (element.percentage <= 50) {
+                        data[2] = { ...data[2], ...bar_data };
+                    } else if (element.percentage <= 75) {
+                        data[1] = { ...data[1], ...bar_data };
+                    } else if (element.percentage <= 100) {
+                        data[0] = { ...data[0], ...bar_data };
+                    }
+                });
+            }
+    
+            // Create axes
+            // https://www.amcharts.com/docs/v5/charts/xy-chart/axes/
+            let yAxis = chart.yAxes.push(
+                am5xy.CategoryAxis.new(root, {
+                    categoryField: 'year',
+                    renderer: am5xy.AxisRendererY.new(root, {
+                        cellStartLocation: 0.2,
+                        cellEndLocation: 0.9,
+                        strokeOpacity: 1,
+                        strokeWidth: 1,
+                    }),
+                })
+            );
+    
+            //console.log(data);
+            //console.log(data1)
+    
+            const myTheme = am5.Theme.new(root);
+    
+            myTheme.rule('Grid').setAll({
+                visible: false,
+            });
+    
+            root.setThemes([myTheme]);
+    
+            let yRenderer = yAxis.get('renderer');
+            yRenderer.labels.template.setAll({
+                visible: false,
+            });
+    
+            yAxis.data.setAll(data);
+    
+            let xAxis = chart.xAxes.push(
+                am5xy.ValueAxis.new(root, {
+                    min: 0,
+                    numberFormat: "''",
+                    renderer: am5xy.AxisRendererX.new(root, {
+                        strokeOpacity: 1,
+                        strokeWidth: 1,
+                    }),
+                })
+            );
+    
+            let myRange = [
+                {
+                    x: 20,
+                },
+                {
+                    x: 40,
+                },
+                {
+                    x: 60,
+                },
+                {
+                    x: 80,
+                },
+                {
+                    x: 100,
+                },
+            ];
+    
+            for (var i = 0; i < data.length + 1; i++) {
+                let value = myRange[i].x;
+    
+                let rangeDataItem = xAxis.makeDataItem({
+                    value: value,
+                });
+    
+                let range = xAxis.createAxisRange(rangeDataItem);
+    
+                rangeDataItem.get('label').setAll({
+                    forceHidden: false,
+                    text: value + '%',
+                });
+            }
+    
+            yAxis.children.moveValue(
+                am5.Label.new(root, {
+                    html:
+                        `
+                    <div style="background: #000;
+                        color: #fff;
+                        width: 50px;
+                        height: 200px;
+                        padding: 10px;
+                        text-align: center;
+                        border-radius: 15px 0px 0 15px;">
+                        <div style="transform: rotate(-90deg);
+                        position: absolute;
+                        left: -50px;
+                        top: 38%;">
+                        <label style="font-size: 12px;
+                        width: 150px;
+                        position: relative;
+                        top: 48%;">` +
+                        this.barchartData[0].development_type +
+                        `</label>
+                    <span style="font-size: 12px;"><b>` +
+                        this.barchartData[0].ultimate_field +
+                        `</b><span>
+                    <div>
+                    </div>
+                    `,
+                }),
+                0
+            );
+    
+            // Add series
+            // https://www.amcharts.com/docs/v5/charts/xy-chart/series/
+            let series1 = chart.series.push(
+                am5xy.ColumnSeries.new(root, {
+                    name: 'income',
+                    xAxis: xAxis,
+                    yAxis: yAxis,
+                    valueXField: 'income',
+                    categoryYField: 'year',
+                    sequencedInterpolation: true,
+                })
+            );
+    
+            series1.columns.template.setAll({
+                height: am5.percent(70),
+                templateField: 'columnConfig',
+                strokeOpacity: 0,
+            });
+    
+            series1.bullets.push(function () {
+                return am5.Bullet.new(root, {
+                    locationX: 0.8,
+                    locationY: -0.5,
+                    sprite: am5.Label.new(root, {
+                        centerY: am5.p50,
+                        html: `<div style="text-align:center;">
+                      {comIncome} <br> {compText}<br>
+                      <img src="{img}" width="120" style="margin-top:-17px;margin-left:-17px;">
+                </div>`,
+                    }),
+                });
+            });
+    
+            // Add cursor
+            // https://www.amcharts.com/docs/v5/charts/xy-chart/cursor/
+            let cursor = chart.set(
+                'cursor',
+                am5xy.XYCursor.new(root, {
+                    behavior: 'zoomY',
+                })
+            );
+            cursor.lineX.set('visible', false);
+            cursor.lineY.set('visible', false);
+    
+            series1.data.setAll(data);
+    
+            // Make stuff animate on load
+            // https://www.amcharts.com/docs/v5/concepts/animations/
+            series1.appear();
+            chart.appear(1000, 100);
+    
+            chart.children.unshift(
+                am5.Label.new(root, {
+                    text: this.barchartData[0].taxonomy_name,
+                    fontSize: 15,
+                    fontWeight: '500',
+                    textAlign: 'center',
+                    x: am5.percent(40),
+                    centerX: am5.percent(50),
+                    paddingTop: -20,
+                    paddingBottom: 10,
+                    paddingLeft: 160,
+                })
+            );
+        }
     }
 }

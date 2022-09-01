@@ -15,7 +15,6 @@ export class ViewDataComponent implements OnInit {
     ndhsDetails: any = [];
     viewData: any;
     object: any = object.keys;
-    log: any = console.log;
     countryName: any;
     subscription: Subscription = new Subscription();
 

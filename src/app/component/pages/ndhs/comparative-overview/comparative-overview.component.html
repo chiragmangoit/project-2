@@ -13,6 +13,7 @@
             <div class="col-md-5 col-sm-12 col-xs-12">
                 <div class="back-btn">
                     <a mat-stroked-button
+                        routerLink="/comparative-result"
                         ><svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="24"
@@ -56,14 +57,13 @@
                                 <div>
                                     <div
                                         [class]="
-                                            toggle ? 'showChart' : 'hideChart'
-                                        "
-                                        id="chartdiv2"
+                                        toggle ? 'hideChart' : 'showChart'
+                                        "            
                                     >
                                         <div
                                             id="chartdiv2"
                                             style="
-                                                width: 400px;
+                                                width: 500px;
                                                 height: 250px;
                                                 margin: 40px auto;
                                             "
@@ -75,7 +75,7 @@
                                 <div>
                                     <div
                                         [class]="
-                                            toggle ? 'hideChart' : 'showChart'
+                                        toggle ? 'showChart' : 'hideChart'
                                         "
                                         id="chartdiv1"
                                     >
@@ -97,8 +97,7 @@
                 <!-- panel one End -->
                 <!-- panel one start -->
                 <div class="panel comparative-details">
-                    <div class="panel-content">
-                    </div>
+                    <div class="panel-content"></div>
                     <div class="panel-content">
                         <div class="detail-btn">
                             <a
@@ -113,7 +112,6 @@
                                     {{ developmentName }}
                                 </h5>
                                 <h5>{{ ultimate }}</h5>
-                        
                             </div>
                             <div class="status-badge" *ngIf="compareCountry">
                                 <ul>
@@ -143,32 +141,27 @@
                                             </div>
                                             <mat-accordion>
                                                 <mat-expansion-panel
-                                                    disabled
-                                                    expanded="true"
+                                                    [expanded]="0"
                                                     hideToggle
                                                 >
                                                     <mat-expansion-panel-header>
                                                         <mat-panel-title>
+                                                            {{ultimateName}}
                                                         </mat-panel-title>
                                                         <mat-panel-description>
-                                                            <!-- <mat-icon>arrow_drop_down</mat-icon> -->
                                                         </mat-panel-description>
                                                     </mat-expansion-panel-header>
-
                                                     <div
                                                         class="accordion-content"
                                                     >
                                                         <div
-                                                            *ngIf="
-                                                                sortedTableData
-                                                            "
                                                             class="content-row"
+                                                            *ngIf="tableData"
                                                         >
                                                             <mat-accordion
                                                                 *ngFor="
-                                                                    let data of object(
-                                                                        sortedTableData
-                                                                    )
+                                                                    let data of tableData;
+                                                                    let k = index
                                                                 "
                                                             >
                                                                 <div
@@ -181,55 +174,69 @@
                                                                             <div
                                                                                 class="left-content col-md-7"
                                                                             >
-                                                                                <mat-panel-title
-                                                                                    >{{
-                                                                                        sortedTableData[
+                                                                                <mat-panel-title>
+                                                                                    {{
+                                                                                        object(
                                                                                             data
-                                                                                        ][0]
-                                                                                            .indicator_name
+                                                                                        )
                                                                                     }}
-                                                                                    <!-- {{indicator[0]}} -->
                                                                                 </mat-panel-title>
                                                                             </div>
-                                                                            <!-- <div
-                                                                                class="right-content col-md-4"
+                                                                            <div
+                                                                                class="right-content col-md-5"
+                                                                                style="
+                                                                                    display: flex;
+                                                                                "
                                                                             >
                                                                                 <div
-                                                                                    class="country-1"
+                                                                                    *ngFor="
+                                                                                        let countryscore of sortedTableData[
+                                                                                            k
+                                                                                        ][
+                                                                                            object(
+                                                                                                data
+                                                                                            )
+                                                                                        ]; let i = index
+                                                                                    "
+                                                                                    class="country-2"
                                                                                 >
                                                                                     <Span>
+                                                                                        <!-- {{indicator.countries[1]}} -->
                                                                                         <mat-icon
-                                                                                            >arrow_drop_up</mat-icon
-                                                                                        >
+                                                                                            >arrow_drop_up
+                                                                                        </mat-icon>
                                                                                     </Span>
                                                                                     <div
                                                                                         class="rating"
                                                                                     >
-                                                                                        <ng-container *ngFor="let dash of tableScoreArray;let i=index">
-
-                                                                                            <span *ngIf=" dash <= (((sortedTableData[data][0].actual_score/sortedTableData[data][0].indicator_score) * 100)/20)" class="green"></span>
-                                                                                            <span *ngIf=" dash > (((sortedTableData[data][0].actual_score/sortedTableData[data][0].indicator_score) * 100)/20)" class="gray"></span>
+                                                                                        <ng-container
+                                                                                            *ngFor="
+                                                                                                let value of tableScoreArray
+                                                                                            "
+                                                                                        >
+                                                                                            <ng-container>
+                                                                                                <span
+                                                                                                    *ngIf="
+                                                                                                        value <=
+                                                                                                            countryscore;
+                                                                                                        else grey
+                                                                                                    "
+                                                                                                    [class]=" i == 0 ? 'green' : 'blue' "
+                                                                                                >
+                                                                                                </span>
+                                                                                                <ng-template
+                                                                                                    #grey
+                                                                                                >
+                                                                                                    <span
+                                                                                                        class="gray"
+                                                                                                    ></span>
+                                                                                                </ng-template>
+                                                                                            </ng-container>
                                                                                         </ng-container>
                                                                                     </div>
                                                                                 </div>
-                                                                                <div
-                                                                                    class="country-2"
-                                                                                >
-                                                                                    <Span
-                                                                                        ><mat-icon
-                                                                                            >arrow_drop_up</mat-icon
-                                                                                        >
-                                                                                    </Span>
-                                                                                    <div
-                                                                                        class="rating"
-                                                                                    >
-                                                                                        <!-- <ng-container *ngFor="let dash of dash_array;let i=index">
-                                                                                            <span *ngIf=" dash <= (((indicator[1][1].actual_score/indicator[1][1].indicator_score) * 100)/20)" class="green"></span>
-                                                                                            <span *ngIf=" dash > (((indicator[1][1].actual_score/indicator[1][1].indicator_score) * 100)/20)" class="gray"></span>
-                                                                                        </ng-container> -->
-                                                                            <!-- </div> -->
-                                                                            <!-- </div> -->
-                                                                            <!-- </div> -->
+                                                                            </div>
+
                                                                             <mat-panel-description>
                                                                                 <mat-icon
                                                                                     >arrow_drop_down</mat-icon
@@ -237,33 +244,39 @@
                                                                             </mat-panel-description>
                                                                         </mat-expansion-panel-header>
                                                                         <div
-                                                                            *ngFor="
-                                                                                let innerData of sortedTableData[
-                                                                                    data
-                                                                                ];
-                                                                                let i = index
-                                                                            "
                                                                             class="content-row"
                                                                         >
                                                                             <div
                                                                                 class="query-right-content col-md-12"
+                                                                                *ngFor="
+                                                                                    let innerData of object(
+                                                                                        data[
+                                                                                            object(
+                                                                                                data
+                                                                                            )
+                                                                                        ]
+                                                                                    );
+                                                                                    let i = index
+                                                                                "
                                                                             >
                                                                                 <div
-                                                                                    *ngIf="
-                                                                                        i <
-                                                                                        sortedTableData[
-                                                                                            data
-                                                                                        ]
-                                                                                            .length /
-                                                                                            2
-                                                                                    "
-                                                                                    class="query-name col-md-7"
+                                                                                    class="query-name col-md-6"
                                                                                 >
                                                                                     {{
-                                                                                        innerData.question
+                                                                                        innerData
                                                                                     }}
                                                                                 </div>
+
                                                                                 <div
+                                                                                    *ngFor="
+                                                                                        let item of data[
+                                                                                            object(
+                                                                                                data
+                                                                                            )
+                                                                                        ][
+                                                                                            innerData
+                                                                                        ]
+                                                                                    "
                                                                                     class="country-1 col-md-2"
                                                                                 >
                                                                                     <div
@@ -271,40 +284,23 @@
                                                                                     >
                                                                                         <span
                                                                                             *ngIf="
-                                                                                                innerData.status ==
+                                                                                                item.status ==
                                                                                                 'Yes'
                                                                                             "
                                                                                             class="green success"
                                                                                         ></span>
                                                                                         <span
                                                                                             *ngIf="
-                                                                                                innerData.status ==
+                                                                                                item.status ==
                                                                                                 'No'
                                                                                             "
                                                                                             class="alert-red danger"
                                                                                         ></span>
                                                                                         <span
                                                                                             *ngIf="
-                                                                                                innerData.status ==
+                                                                                                item.status ==
                                                                                                 undefined
                                                                                             "
-                                                                                            class="gray disable-status"
-                                                                                        ></span>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div
-                                                                                    class="country-2 col-md-2"
-                                                                                >
-                                                                                    <div
-                                                                                        class="rating"
-                                                                                    >
-                                                                                        <span
-                                                                                            class="green success"
-                                                                                        ></span>
-                                                                                        <span
-                                                                                            class="alert-red danger"
-                                                                                        ></span>
-                                                                                        <span
                                                                                             class="gray disable-status"
                                                                                         ></span>
                                                                                     </div>

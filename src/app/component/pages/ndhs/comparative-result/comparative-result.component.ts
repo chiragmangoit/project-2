@@ -40,12 +40,10 @@ export class ComparativeResultComponent implements OnInit, AfterViewInit {
     uniqueCountry: any[] = [];
     resultArray: any = [];
     object: any = Object.keys;
-    log: any = console.log;
+    graph: any;
 
     @ViewChild('main') main: ElementRef | any;
     @ViewChild('mySelect') mySelect: ElementRef | any;
-
-    graph = data;
 
     constructor(
         private mapService: MainMapService,
@@ -59,6 +57,7 @@ export class ComparativeResultComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit(): void {
+        this.graph = data;
         this.apiService
             .getAllCountries()
             .subscribe((data) => (this.countriesToShow = data));
@@ -448,8 +447,5 @@ export class ComparativeResultComponent implements OnInit, AfterViewInit {
             ],
         };
         nodechart.setOption(option);
-
     }
-
-    
 }

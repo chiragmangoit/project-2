@@ -114,7 +114,7 @@ export class NdhsMapComponent implements OnInit, AfterViewInit {
                 scale: 2,
                 strokeWidth: 3,
                 strokeOpacity: 5,
-                stroke: am5.color(0xff7b7b),
+                stroke:  am5.color(0xff7b7b),
             });
 
             circle.events.on('click', (e: any) => {
